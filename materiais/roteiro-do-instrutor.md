@@ -2,6 +2,10 @@
 
 **Data: 19/11/2026. Duração: 55 minutos e 5 minutos de margem.**
 
+## Ambiente já preparado
+
+O projeto está em [pedropalmieri/workshop4-pr-sql-ia](https://github.com/pedropalmieri/workshop4-pr-sql-ia), com clone local em `~/projetos/workshop4-pr-sql-ia`. O [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) contém a correção de referência e passou no check inicial de 17/11/2026. Para o encontro, use o [guia de condução](guia-de-conducao.md) e o [laboratório Git](../docs/laboratorio-pr.md). A seção de criação de um novo repositório abaixo só se aplica caso você queira montar outro ambiente do zero.
+
 Objetivo: conectar PostgreSQL ao fluxo de PR com teste de consulta e registro de decisões com IA tutora. Caso proposto: relatório de pedidos pagos por cliente. Não há entrega própria do encontro. O exemplo não substitui o enunciado oficial do Desafio Final.
 
 ## O que vem do briefing e o que propomos
@@ -16,13 +20,13 @@ Como a data mudou de 12 para 19/11, a abertura considera o Desafio Final já apr
 
 1. Abra o PowerPoint e confira modo de apresentação e notas. Use o slide 8 como tela de transição para o computador.
 2. Prepare quatro janelas: editor na pasta de treino, terminal, chat de IA e repositório GitHub. Aumente a fonte do terminal e do editor.
-3. Na pasta `pratica`, execute `bash demo.sh subir`, `base`, `aplicar` e `testar`. A consulta inicial deve falhar no teste. Não deixe o terminal parado no arquivo da solução.
+3. Na raiz do repositório clonado, execute `bash demo.sh subir`, `base`, `aplicar` e `testar`. A consulta inicial deve falhar no teste. Não deixe o terminal parado no arquivo da solução.
 4. Faça o download da imagem Docker antes. Não gaste o tempo da turma com instalação.
 5. Prepare o repositório de treino conforme a seção seguinte. Faça um ensaio completo. Se quiser revisão independente, combine participação de um colega antes do encontro.
 
 ## Preparação do repositório de treino
 
-Use uma **nova pasta**, fora de qualquer outro repositório. Copie nela o conteúdo de `pratica`, incluindo a pasta oculta `.github`, sem alterar o kit original. Crie no GitHub um repositório vazio, sem README automático. Use a URL HTTPS ou SSH exibida pelo GitHub.
+Esta seção só é necessária para criar outro repositório do zero. Use uma **nova pasta**, fora de qualquer outro repositório. Copie os arquivos do projeto, incluindo `.github`, mas sem copiar a pasta `.git`. Crie no GitHub um repositório vazio, sem README automático. Use a URL HTTPS ou SSH exibida pelo GitHub. Para usar o repositório existente, siga o laboratório Git e pule esta seção.
 
 Na raiz da cópia de treino, antes de corrigir a consulta:
 
@@ -38,7 +42,7 @@ Adicione o remoto com `git remote add origin URL_DO_SEU_REPOSITORIO` substituind
 git push -u origin main
 ```
 
-Faça login no GitHub antes da aula. Não há repositório remoto criado ou PR publicado automaticamente neste material.
+Faça login no GitHub antes da aula. O repositório existente e o PR de referência estão na seção Ambiente já preparado.
 
 ## Slides e condução
 
