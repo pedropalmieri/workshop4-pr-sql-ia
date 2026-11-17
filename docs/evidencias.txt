@@ -1,0 +1,27 @@
+Validação da branch fix/clientes-sem-pagamento em 17/11/2026.
+Ambiente: PostgreSQL 17.12 em Docker, dados fictícios do workshop.
+
+Antes da correção (versão em main):
+sql/03_testes.sql: FAIL: resultado diferente do contrato.
+Código de saída: 3. Erro intencional do exercício.
+
+Depois da correção, comandos executados na raiz do repositório:
+$ bash demo.sh aplicar
+CREATE VIEW
+$ bash demo.sh testar
+NOTICE: PASS: os quatro clientes, contagens e totais correspondem ao contrato
+DO
+BEGIN
+UPDATE 5
+DO
+ROLLBACK
+NOTICE: PASS: cenário sem pedidos pagos
+Código de saída: 0.
+
+O teste cobre o resultado completo, com linhas ausentes/extras, contagens e totais.
+Os quatro perfis incluem apenas cancelados, ausência de pedidos e pago com valor zero.
+O segundo cenário cancela todos os pedidos e usa ROLLBACK para manter a base.
+
+Uso de IA: kit previamente preparado com auxílio de IA. O registro de exemplo em
+docs/registro-ia-exemplo.md é uma simulação didática. Não representa interações
+reais de um Fellow nem evidência de delegação da Sprint 1.
