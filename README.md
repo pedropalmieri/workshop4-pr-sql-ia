@@ -1,11 +1,11 @@
 # Workshop 4: prática com PostgreSQL
 
-Repositório de apoio: https://github.com/pedrosalmeida-dev/workshop4-pr-sql-ia
+Repositório de apoio: https://github.com/pedropalmieri/workshop4-pr-sql-ia
 
 **A branch `main` contém o erro intencional para a demonstração.** A correção de referência fica na branch `fix/clientes-sem-pagamento`, em PR separado. O arquivo em `solucao/` é apoio prévio do instrutor. Os slides editáveis e o roteiro estão em `materiais/`.
 
 ```bash
-git clone https://github.com/pedrosalmeida-dev/workshop4-pr-sql-ia.git
+git clone https://github.com/pedropalmieri/workshop4-pr-sql-ia.git
 cd workshop4-pr-sql-ia
 ```
 
