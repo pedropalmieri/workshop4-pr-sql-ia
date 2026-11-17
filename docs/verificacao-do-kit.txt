@@ -1,4 +1,7 @@
-Verificação local do material, realizada em 17/11/2026.
+Registro histórico da primeira verificação local, realizada em 17/11/2026.
+Depois deste registro, o repositório foi publicado e o PR nº 1 passou no check remoto.
+Consulte o README e o próprio PR para o estado atual. As linhas abaixo descrevem
+somente a verificação inicial, antes da publicação.
 Docker Engine 29.9.3. Imagem postgres:17.12-alpine.
 Dados fictícios. Nenhum repositório ou Pull Request remoto foi criado.
 
