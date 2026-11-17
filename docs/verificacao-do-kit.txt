@@ -1,0 +1,26 @@
+Verificação local do material, realizada em 17/11/2026.
+Docker Engine 29.9.3. Imagem postgres:17.12-alpine.
+Dados fictícios. Nenhum repositório ou Pull Request remoto foi criado.
+
+1. Carregamento de sql/01_base.sql: concluído, 4 clientes e 5 pedidos.
+2. Aplicação de sql/02_consulta.sql: CREATE VIEW.
+3. Execução de sql/03_testes.sql com consulta inicial:
+   ERROR: FAIL: resultado diferente do contrato. Compare com docs/contrato.md
+   Código de saída do psql: 3. Falha esperada.
+4. Aplicação de solucao/02_consulta.sql: CREATE VIEW.
+5. Execução de sql/03_testes.sql com consulta corrigida:
+   NOTICE: PASS: os quatro clientes, contagens e totais correspondem ao contrato
+   NOTICE: PASS: cenário sem pedidos pagos
+   Código de saída do psql: 0.
+6. SELECT final:
+   id | nome  | pedidos_pagos | total_pago
+    1 | Ana   |             2 |     150.00
+    2 | Bruno |             0 |       0.00
+    3 | Carla |             0 |       0.00
+    4 | Diego |             1 |       0.00
+
+O teste do cenário alternativo usa ROLLBACK, preservando a base.
+demo.sh passou na verificação de sintaxe Bash.
+GitHub Actions e abertura/revisão remota de PR não foram executados.
+O arquivo sql/02_consulta.sql do kit continua na versão inicial com erro intencional.
+As conversas e decisões do exemplo são simulações, não uso real de IA por um Fellow.
