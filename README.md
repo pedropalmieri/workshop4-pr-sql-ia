@@ -20,6 +20,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A implem
 | SELECT, filtros, JOIN e agregações | [Consultas passo a passo](docs/consultas-passo-a-passo.md) |
 | Exemplos numerados para executar no pgAdmin | [Sequência de demonstração](exemplos/demonstracao/README.md) |
 | Análise do problema e da solução | [SQL comentado](docs/sql-comentado.md) |
+| Aplicação da main no banco após o merge | [Fluxo de aplicação e consulta do resultado](docs/aplicacao-main.md) |
 | Validação e revisão | [Laboratório de Pull Request](docs/laboratorio-pr.md) |
 | Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
 | IA como tutora | [Perguntas para diagnóstico](docs/prompts-tutora.md) |
@@ -118,6 +119,10 @@ bash scripts/registrar-evidencia.sh
 ```
 
 O arquivo gerado inclui commit, alterações locais, definição efetiva da view e resultados. Uma falha no teste continua sendo uma falha no comando.
+
+## Aplicação após o merge
+
+O workflow **Testes SQL** valida o PR em um banco temporário. Após o merge com alteração SQL, **Aplicar main no banco de demonstracao** aplica e testa a consulta no PostgreSQL do laboratório, mantendo o banco disponível no pgAdmin. A aplicação só confirma a mudança se os testes passarem. Aprovar o PR, por si só, não aplica o SQL: é necessário fazer o merge. Veja [o fluxo completo e a consulta do commit aplicado](docs/aplicacao-main.md).
 
 ## Uso da IA
 

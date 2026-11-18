@@ -82,6 +82,10 @@ Após um pedido de ajuste, altere o arquivo correspondente, valide novamente qua
 
 O [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) apresenta uma solução de referência com evidência e check automatizado.
 
+## 7. Aplicação após o merge
+
+Após o merge com alteração SQL na `main`, o workflow de aplicação atualiza o PostgreSQL da demonstração, testa a consulta e preserva os dados. A aprovação do PR sozinha não dispara essa aplicação. Confira o resultado no log e execute novamente o SELECT no pgAdmin. Se o teste falhar, a aplicação é desfeita e o banco mantém a consulta anterior. Veja [aplicação da main no banco](aplicacao-main.md).
+
 ## Branch e estado do banco
 
 Trocar de branch altera os arquivos, mas não reaplica a consulta no PostgreSQL:
