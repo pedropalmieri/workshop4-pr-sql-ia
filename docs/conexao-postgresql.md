@@ -6,6 +6,27 @@ Os comandos do projeto abrem o cliente psql **dentro do contêiner**, conectando
 
 Esse endereço é o localhost **do contêiner**. Nenhuma porta está publicada no Mac/Windows/Linux. Portanto, esses parâmetros não representam uma conexão direta a partir de Navicat, DBeaver ou outro cliente instalado no computador.
 
+## Servidor, banco, schema e cliente
+
+| Conceito | Neste projeto | Função |
+|---|---|---|
+| Servidor | Serviço Docker `db` | Executa o PostgreSQL e recebe conexões |
+| Banco | `workshop` | Banco selecionado na conexão |
+| Schema | `ws4` | Organiza os objetos dentro do banco |
+| Tabelas | `ws4.clientes` e `ws4.pedidos` | Armazenam os dados fictícios |
+| View | `ws4.resumo_clientes` | Define o relatório consultado, após aplicar o SQL |
+| Cliente SQL | `psql` no contêiner | Envia comandos e apresenta resultados |
+
+A conexão seleciona o banco. O schema identifica objetos dentro dele. Por isso usamos nomes como `ws4.clientes` nas consultas, sem depender do search_path da sessão.
+
+## Precisamos de pgAdmin?
+
+**Não para a prática deste workshop.** O psql já permite executar consultas, visualizar resultados e consultar a estrutura. O caminho principal usa somente Docker, terminal e editor.
+
+pgAdmin é uma interface gráfica opcional para administração e consulta do PostgreSQL. Ele não substitui o servidor nem é requisito para acessar um schema. O projeto não instala nem configura pgAdmin. Para usar uma interface gráfica no computador seria necessário configurar o acesso de rede apropriado. Tentar conectar o pgAdmin local a `localhost:5432` não alcança este banco, pois nenhuma porta foi publicada no host.
+
+Na atividade, use `bash demo.sh estrutura` para explorar os objetos e `bash demo.sh terminal` para as consultas. Não é necessário acrescentar uma instalação durante o encontro.
+
 ## Verificação da conexão
 
 Na raiz do clone:
@@ -29,6 +50,15 @@ O comando mostra a conexão estabelecida, não apenas o estado do contêiner. O 
 
 O ambiente novo inicializa autenticação SCRAM para conexões TCP e locais. `scripts/validar-ambiente.sh` verifica conexão correta e exige recusa de uma senha incorreta, antes de carregar e testar as consultas. A senha no compose é exclusivamente didática.
 
+Depois de carregar os dados, confira o schema e as tabelas:
+
+```bash
+bash demo.sh base
+bash demo.sh estrutura
+```
+
+A view aparece na listagem depois de `bash demo.sh aplicar`. A ausência da view antes desse comando não é um erro de conexão.
+
 ## Executar uma consulta por vez
 
 ```bash
@@ -36,7 +66,7 @@ bash demo.sh base
 bash demo.sh terminal
 ```
 
-No prompt `workshop=>`, use:
+O usuário didático criado pela imagem é superusuário, então o prompt padrão é `workshop=#`. Use:
 
 ```sql
 \conninfo
@@ -45,7 +75,7 @@ SELECT current_database(), current_user;
 SELECT id, nome FROM ws4.clientes ORDER BY id;
 ```
 
-Agora execute os blocos de `exemplos/consultas-passo-a-passo.sql` individualmente. O ponto e vírgula termina uma instrução SQL. Se o prompt mudar para `workshop->`, provavelmente a instrução está incompleta. `\r` limpa o buffer atual. `\q` sai do psql e volta ao terminal do computador.
+Agora execute os blocos de `exemplos/consultas-passo-a-passo.sql` individualmente. O ponto e vírgula termina uma instrução SQL. Se o prompt mudar para `workshop-#`, a instrução ainda está em composição. `\r` limpa o buffer atual. `\q` sai do psql e volta ao terminal do computador. O terminal do projeto exibe NULL como `(NULL)` e desativa a paginação para manter os resultados na tela.
 
 Os comandos que começam com barra invertida pertencem ao psql, não ao SQL. A instrução SQL é executada pelo PostgreSQL. A distinção ajuda a explicar o que está acontecendo na tela.
 
@@ -67,3 +97,5 @@ bash demo.sh passos
 | Contêiner saudável, mas consulta falha | A conexão e a correção da consulta são verificações diferentes. Leia o erro SQL e o contrato |
 
 A mudança de autenticação exige inicialização de um contêiner novo. O `compose up` recria o serviço quando sua configuração muda. Como os dados são descartáveis, recarregue `base` e `aplicar` depois. Não use estes comandos para bancos pessoais ou de produção.
+
+Referências: [psql](https://www.postgresql.org/docs/current/app-psql.html) e [pgAdmin](https://www.pgadmin.org/docs/pgadmin4/latest/getting_started.html).

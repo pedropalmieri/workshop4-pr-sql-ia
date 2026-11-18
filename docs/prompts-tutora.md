@@ -1,6 +1,6 @@
 # Prompts para IA como tutora
 
-Use um chat em modo de conversa. Evite agentes que editam arquivos e geração automática de solução neste exercício. O papel de Tutora corresponde ao degrau vigente da Sprint 1.
+Ferramenta da atividade: **ChatGPT em conversa de texto no navegador**. O uso principal acontece depois que a consulta inicial e o teste expõem o erro. Consulte [uso da IA](uso-da-ia.md) para a sequência completa. O papel de Tutora corresponde ao degrau vigente da Sprint 1.
 
 ## Diagnóstico
 
@@ -8,9 +8,13 @@ Use um chat em modo de conversa. Evite agentes que editam arquivos e geração a
 
 ## Testes
 
+Prompt complementar para aprofundamento, sem necessidade de usar todos os prompts no encontro.
+
 "Sem escrever SQL, sugira casos de teste para contar pedidos pagos por cliente, incluindo clientes sem pedidos. Explique o resultado esperado de cada caso. Eu vou implementar e executar os testes."
 
 ## Discussão de uma alternativa
+
+A hipótese abaixo é apresentada pela pessoa que pergunta. Não a registre como sugestão espontânea da IA.
 
 "Um colega propôs remover clientes com total zero para simplificar o relatório. Compare a ideia com este requisito: todos os clientes devem aparecer e um pedido pago de valor zero é válido. Não escreva código. Que evidência permitiria aceitar ou rejeitar a ideia?"
 

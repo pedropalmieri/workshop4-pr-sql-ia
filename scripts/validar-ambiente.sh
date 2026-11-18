@@ -19,6 +19,7 @@ else
   fi
 fi
 bash demo.sh base
+bash demo.sh estrutura
 bash demo.sh passos
 bash demo.sh inicio
 echo 'Consulta inicial: devem aparecer Ana e Diego.'

@@ -11,11 +11,11 @@ O que mudou na consulta e por quê?
 - [ ] Comparei com o contrato calculado manualmente.
 - [ ] Executei o teste com os quatro perfis de cliente.
 - [ ] Executei o cenário sem pedidos pagos.
-- [ ] Incluí comandos e saídas reais em docs/evidencias.txt.
+- [ ] Incluí o caminho da evidência real gerada por scripts/registrar-evidencia.sh (docs/evidencias-AAAAMMDD-HHMMSS.txt, por padrão).
 
 ## Uso da IA
 
-Link para registro de tarefa, justificativa, sugestão aceita e rejeitada, evidência e retrabalho humano. Papel: Tutora.
+Link para registro de tarefa, justificativa, sugestão aceita e rejeitada, evidência e retrabalho humano. Ferramenta da atividade: ChatGPT. Papel: Tutora. Identifique exemplos fictícios como ilustrativos.
 
 ## Revisão
 
