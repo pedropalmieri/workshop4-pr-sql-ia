@@ -2,7 +2,7 @@
 
 O executor GitHub Actions usa a imagem oficial, com o cliente PostgreSQL adicionado no Dockerfile. Executa em um contêiner ligado à rede `ws4-workshop_default`, sem porta publicada e sem acesso ao socket Docker. O PostgreSQL e o pgAdmin continuam nos contêineres existentes.
 
-A etiqueta `ws4-banco-demo` identifica o executor exclusivo deste repositório. O workflow de aplicação atende apenas à `main`, por push com alteração SQL ou acionamento manual. Pull Requests continuam usando os executores temporários do GitHub para validação.
+A etiqueta `ws4-banco-demo` identifica o executor exclusivo deste repositório. O workflow de aplicação atende apenas à `main`, após o merge de um PR com alteração SQL ou acionamento manual. Pull Requests continuam usando os executores temporários do GitHub para validação.
 
 ## Preparação
 

@@ -1,10 +1,10 @@
 name: Aplicar main no banco de demonstracao
 on:
-  push:
+  pull_request:
+    types: [closed]
     branches: [main]
     paths:
       - sql/**
-      - scripts/aplicar-no-banco.sh
   workflow_dispatch:
 permissions:
   contents: read
@@ -13,12 +13,15 @@ concurrency:
   cancel-in-progress: false
 jobs:
   aplicar:
-    if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
+    if: >-
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+      (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
     runs-on: [self-hosted, Linux, ARM64, ws4-banco-demo]
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
           persist-credentials: false
       - name: Aplicar SQL e validar no PostgreSQL existente
         run: bash scripts/aplicar-no-banco.sh

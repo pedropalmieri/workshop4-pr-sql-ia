@@ -7,7 +7,7 @@ O PR valida a mudança em um banco temporário do GitHub Actions. Após o merge,
 1. Crie uma branch e altere `sql/02_consulta.sql`.
 2. Faça commit, push e abra o PR. O workflow **Testes SQL** valida a consulta em ambiente temporário.
 3. Confira os testes e revise o diff e as decisões registradas. Aprovar o PR não altera o banco.
-4. Faça o merge na `main`. O push resultante dispara **Aplicar main no banco de demonstracao** quando o SQL mudou.
+4. Faça o merge na `main`. O evento de PR mesclado dispara **Aplicar main no banco de demonstracao** quando o SQL mudou.
 5. O executor `workshop4-docker`, em Docker no computador do laboratório, aplica e testa o SQL no banco existente.
 6. Confira no log do workflow os resultados antes e depois, o commit e os testes. No pgAdmin, execute novamente o SELECT abaixo para atualizar o resultado exibido.
 
@@ -25,7 +25,7 @@ O script `scripts/aplicar-no-banco.sh` executa a consulta de `sql/02_consulta.sq
 
 A aplicação não carrega `sql/01_base.sql`, não recria o banco e não encerra os serviços. Ela exige o laboratório previamente inicializado. As execuções são serializadas pelo workflow e por uma trava transacional no PostgreSQL.
 
-Aprovação, merge e aplicação são eventos distintos. O workflow também aceita acionamento manual em **Actions > Aplicar main no banco de demonstracao > Run workflow**, somente na `main`. O acionamento manual reaplica o SQL atual da `main`.
+Aprovação, merge e aplicação são eventos distintos. Fechar um PR sem merge não aplica a consulta. Um push direto na main também não dispara a aplicação. O workflow também aceita acionamento manual em **Actions > Aplicar main no banco de demonstracao > Run workflow**, somente na `main`. O acionamento manual reaplica o SQL atual da `main`.
 
 ## Estado inicial do exercício
 
