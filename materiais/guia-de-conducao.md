@@ -22,65 +22,24 @@ Na `main`, a saída inicial inclui apenas Ana e Diego. Para manter o ensaio livr
 
 ## Sequência essencial da demonstração, 25 minutos
 
-### 1. Requisito e resultado manual, 3 minutos
+A parte prática reserva 18 minutos para conexão, leitura das consultas e diagnóstico, 2 para evidência e 5 para PR. Os 16 minutos iniciais de slides continuam apresentando o contrato, testes e papel da IA. As explicações detalhadas ficam em [Explicação das consultas](explicacao-das-consultas.md).
 
-Abra o contrato e mostre as duas tabelas da base. Pergunte: “Qual deveria ser o resultado de Ana? E de Carla?”. Aguarde uma resposta antes de abrir a consulta.
+| Minutos da demonstração | Ação e fala principal |
+|---|---|
+| 00–02 | Execute `conexao`. Mostre banco, usuário e versão. Explique que o cliente e o banco estão no Docker. |
+| 02–05 | Abra o contrato e calcule o resultado esperado com a turma. Destaque Bruno, Carla e Diego. |
+| 05–11 | No `terminal`, execute os seis blocos de `exemplos/consultas-passo-a-passo.sql`, explicando a diferença no resultado de cada etapa. Use `\q` para sair. |
+| 11–14 | Volte à consulta inicial, rode `consultar` e `testar`. Explique por que o WHERE elimina Bruno e Carla. Use `diagnosticar` apenas se necessário. |
+| 14–16 | Pergunte à IA tutora sobre o filtro, sem pedir implementação. Discuta a explicação com a turma. |
+| 16–18 | Corrija o SQL manualmente. Execute `aplicar`, `consultar` e `testar`. Compare quatro linhas e dois PASS. |
+| 18–20 | Rode o script de evidência e mostre o modelo de registro. Identifique qualquer exemplo fictício como simulação. |
+| 20–25 | Mostre diff, commit e PR. Prefira o PR de referência se a abertura ao vivo atrasar. Relacione o check ao teste visto localmente. |
 
-Fala de apoio: “A regra pede todos os clientes. Isso inclui quem não pagou e quem nem tem pedido. Vamos usar essa regra para julgar o resultado.”
+Não é necessário mostrar todas as consultas extras de diagnóstico. As seis consultas progressivas explicam as peças do relatório. A consulta com erro demonstra como uma posição diferente do filtro quebra o requisito.
 
-### 2. Erro e teste, 3 minutos
+Fala sobre testes: “O resultado esperado vem do cálculo manual. A consulta em teste não determina sozinha o que seria correto.”
 
-```bash
-bash demo.sh consultar
-bash demo.sh testar
-```
-
-Mostre o FAIL. Diga que a falha é esperada e exponha a diferença entre sintaxe válida e regra atendida. Não gaste o bloco explicando toda a estrutura DO do teste.
-
-Fala de apoio: “O teste sabe o resultado porque nós o calculamos antes. A consulta em teste não é a fonte da resposta esperada.”
-
-### 3. IA tutora e diagnóstico, 4 minutos
-
-Use o primeiro prompt de `docs/prompts-tutora.md`. Peça explicação e perguntas, sem implementação. Se necessário, mostre:
-
-```bash
-bash demo.sh diagnosticar
-```
-
-Fala de apoio: “Carla fica com campos de pedido nulos. Bruno tem uma correspondência, mas cancelada. O WHERE elimina os dois. O filtro no ON permite que o LEFT JOIN preserve quem não tem pagamento.”
-
-Se a IA gerar SQL pronto, peça que retorne ao papel de Tutora. Você faz a alteração no editor.
-
-### 4. Correção e validação, 4 minutos
-
-Em `sql/02_consulta.sql`, mova a condição de status para o ON, unida por AND à chave. Remova o WHERE antigo.
-
-```bash
-bash demo.sh aplicar
-bash demo.sh consultar
-bash demo.sh testar
-```
-
-Mostre quatro clientes e dois PASS. Pergunte por que Diego tem contagem 1 e total zero. O exemplo `contagem` pode ficar para o exercício final.
-
-### 5. Evidência e decisão, 4 minutos
-
-```bash
-bash scripts/registrar-evidencia.sh
-cp docs/registro-ia-modelo.md docs/registro-ia.md
-```
-
-Abra o arquivo de evidência cujo caminho o comando imprime. Mostre o código de saída 0 e explique o vínculo entre versão, execução e resultado.
-
-No registro, escreva a tarefa conceitual delegada, o motivo, a orientação recebida e como você a validou. Para discutir uma rejeição, confronte uma alternativa com o contrato, sem inventar que a IA sugeriu algo que não sugeriu. Se o tempo não permitir uma interação real, mostre o registro fictício como simulação.
-
-### 6. PR e revisão, 7 minutos
-
-Mostre o diff e o commit da sua branch ou abra o PR nº 1 como referência previamente preparada. Ele está aberto e contém evidência local e check remoto. Não precisa realizar merge durante a aula.
-
-Pergunta para revisão: “Onde está a evidência de que Carla precisa aparecer?”. Aponte contrato e teste. Depois mostre que novos commits na mesma branch atualizam o PR.
-
-Não confunda comentário do próprio autor com aprovação independente. Um colega pode realizar a revisão real se isso tiver sido combinado.
+Fala sobre IA: “A IA me ajudou a entender o conceito. Eu fiz a alteração e conferi o resultado.” Use essa formulação apenas quando corresponder ao que ocorreu na demonstração.
 
 ## Cartão de comandos
 
