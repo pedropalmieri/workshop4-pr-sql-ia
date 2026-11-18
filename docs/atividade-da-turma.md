@@ -1,12 +1,8 @@
-# Atividade de 5 minutos · revisão da consulta
+# Discussão: contagem, ausência e valor zero
 
-Discussão opcional em dupla ou squad. **Não exige envio, commit ou entrega própria.** É possível participar olhando a tela do instrutor, sem instalar ferramentas.
+O relatório inclui todos os clientes e conta somente pedidos pagos. Ana tem dois pagos e um cancelado. Bruno tem apenas um cancelado. Carla não tem pedidos. Diego tem um pedido pago de valor zero.
 
-## Situação
-
-O relatório inclui todos os clientes e conta apenas pedidos pagos. Ana tem dois pagos e um cancelado. Bruno tem somente cancelado. Carla não tem pedidos. Diego tem um pedido pago de valor zero.
-
-Considere a condição correta:
+Considere esta condição de junção:
 
 ```sql
 FROM ws4.clientes c
@@ -14,19 +10,21 @@ LEFT JOIN ws4.pedidos p
   ON p.cliente_id = c.id AND p.status = 'pago'
 ```
 
-## Discussão
+## Questões
 
-**Primeiros 2 minutos:** discutam duas perguntas.
+1. Qual seria a contagem de Carla se COUNT(p.id) fosse substituído por COUNT(*)?
+2. Por que Diego tem total zero, mas um pedido pago?
+3. COALESCE sozinho recuperaria um cliente eliminado pelo WHERE?
+4. Acrescentar OR p.id IS NULL ao WHERE manteria tanto Carla quanto Bruno?
+5. Qual caso de teste permite distinguir ausência de pedido e pedido pago de valor zero?
 
-1. Se alguém trocar COUNT(p.id) por COUNT(*), qual será a contagem de Carla? Qual linha o banco está contando?
-2. Diego deveria aparecer com contagem 0 ou 1? Por quê?
+## Exploração
 
-**Próximos 2 minutos:** uma dupla ou squad apresenta a conclusão. Outra pessoa aponta qual teste deveria detectar uma alteração incorreta.
+```bash
+bash demo.sh diagnosticar
+bash demo.sh contagem
+```
 
-**Último minuto:** o instrutor mostra `bash demo.sh contagem` e relaciona o resultado ao contrato.
+Compare as linhas da junção com o resultado agregado. Relacione cada diferença ao [contrato da consulta](contrato.md). A discussão pode ser feita em dupla ou squad, sem envio obrigatório.
 
-## Para continuar depois, se quiser
-
-Peça à IA uma explicação conceitual sobre contar linhas e contar chaves não nulas. Não peça a implementação. Compare a resposta com o resultado observado e registre sua decisão somente se tiver usado a ferramenta de fato.
-
-O gabarito fica em `materiais/perguntas-e-gabarito.md` para consulta após a discussão.
+As explicações estão em [consultas passo a passo](consultas-passo-a-passo.md) e [SQL comentado](sql-comentado.md).

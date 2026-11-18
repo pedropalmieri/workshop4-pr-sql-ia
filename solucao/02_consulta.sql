@@ -1,4 +1,4 @@
--- Correção escrita pelo instrutor. Na aula, o humano realiza a alteração.
+-- Solução de referência: preserva clientes sem pedidos pagos.
 CREATE OR REPLACE VIEW ws4.resumo_clientes AS
 SELECT c.id, c.nome,
        COUNT(p.id) AS pedidos_pagos,

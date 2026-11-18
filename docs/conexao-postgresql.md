@@ -1,12 +1,12 @@
 # Conexão com PostgreSQL
 
-## Caminho usado na apresentação
+## Arquitetura da conexão
 
-Os comandos abrem o cliente psql **dentro do contêiner**, conectando por TCP ao PostgreSQL em `127.0.0.1:5432`, com usuário `workshop`, banco `workshop` e a senha didática definida em `compose.yaml`. Não dependem de PostgreSQL ou psql instalado no computador.
+Os comandos do projeto abrem o cliente psql **dentro do contêiner**, conectando por TCP ao PostgreSQL em `127.0.0.1:5432`, com usuário `workshop`, banco `workshop` e a senha didática definida em `compose.yaml`. Não dependem de PostgreSQL ou psql instalado no computador.
 
 Esse endereço é o localhost **do contêiner**. Nenhuma porta está publicada no Mac/Windows/Linux. Portanto, esses parâmetros não representam uma conexão direta a partir de Navicat, DBeaver ou outro cliente instalado no computador.
 
-## Verificação rápida antes da aula
+## Verificação da conexão
 
 Na raiz do clone:
 
@@ -27,7 +27,7 @@ Confira na saída:
 
 O comando mostra a conexão estabelecida, não apenas o estado do contêiner. O healthcheck com pg_isready informa se o servidor aceita conexões, mas sozinho não comprova a senha ou a execução de SQL.
 
-O ambiente novo inicializa autenticação SCRAM para conexões TCP e locais. `scripts/ensaio.sh` verifica conexão correta e exige recusa de uma senha incorreta, antes de carregar e testar as consultas. A senha no compose é exclusivamente didática.
+O ambiente novo inicializa autenticação SCRAM para conexões TCP e locais. `scripts/validar-ambiente.sh` verifica conexão correta e exige recusa de uma senha incorreta, antes de carregar e testar as consultas. A senha no compose é exclusivamente didática.
 
 ## Executar uma consulta por vez
 

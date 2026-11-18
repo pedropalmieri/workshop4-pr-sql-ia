@@ -1,36 +1,34 @@
-# Laboratório Git e Pull Request
+# Laboratório: validação e revisão de uma consulta
 
-Roteiro de apoio para o instrutor e ensaio opcional. Não cria entrega adicional da turma. Os exemplos usam Bash e devem ser executados na raiz do repositório.
+O fluxo registra uma mudança de SQL, suas evidências e a justificativa das decisões. Os comandos usam Bash e partem da raiz do repositório.
 
-## Opção A: mostrar o PR de referência
+## 1. Branch de trabalho
 
-Abra [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1). Compare a descrição, Files changed e Checks. Mostre o filtro movido do WHERE para o ON e o arquivo de evidências.
-
-Essa opção reduz os riscos de tempo. Diga que o PR foi preparado antes, sem apresentar sua abertura como ação feita ao vivo.
-
-## Opção B: criar um novo PR durante a aula
-
-### 1. Partida
+Com a árvore de trabalho limpa:
 
 ```bash
 git status --short --branch
 git switch main
 git pull --ff-only
-git switch -c aula/clientes-19nov-ensaio1
+git switch -c exercicio/clientes-sem-pagamento
 ```
 
-Use outro nome se essa branch já existir. Se houver alterações próprias não salvas, conclua ou preserve seu trabalho antes de trocar de branch. Não use reset destrutivo para preparar a apresentação.
+Use um nome diferente se a branch já existir. Preserve alterações próprias antes de trocar de branch.
 
-### 2. Reproduzir e explicar
+## 2. Reprodução do problema
 
 ```bash
 bash demo.sh subir
+bash demo.sh conexao
 bash demo.sh base
 bash demo.sh aplicar
+bash demo.sh consultar
 bash demo.sh testar
 ```
 
-O FAIL inicial é esperado. Discuta o requisito e use a IA como Tutora. Corrija manualmente `sql/02_consulta.sql` e então:
+Na implementação inicial, o teste falha porque há clientes ausentes. Compare o resultado com o [contrato](contrato.md), investigue a condição de junção e faça a alteração em `sql/02_consulta.sql`.
+
+## 3. Validação e evidência
 
 ```bash
 bash demo.sh aplicar
@@ -40,9 +38,9 @@ bash scripts/registrar-evidencia.sh
 cp docs/registro-ia-modelo.md docs/registro-ia.md
 ```
 
-Preencha o registro com interações reais antes de incluí-lo no commit. Se você usou uma simulação, identifique-a como tal. Não marque uma interação fictícia como evidência do uso de IA de um Fellow.
+O arquivo gerado contém a definição efetivamente aplicada no banco e as saídas dos testes. Preencha o registro com as interações reais com IA: tarefa, justificativa, orientação, decisão, evidência e retrabalho. O [exemplo ilustrativo](registro-ia-exemplo.md) mostra o formato e não representa uma conversa real.
 
-### 3. Conferir e versionar
+## 4. Commit e envio
 
 ```bash
 git diff -- sql/02_consulta.sql
@@ -50,7 +48,7 @@ git status --short
 git add sql/02_consulta.sql docs/registro-ia.md
 ```
 
-Inclua também o arquivo de evidência pelo **caminho exato impresso pelo script**, usando `git add` seguido desse caminho. Depois:
+Inclua também a evidência usando `git add` seguido do caminho exato impresso pelo script. Confira o conteúdo antes de confirmar:
 
 ```bash
 git diff --cached
@@ -58,38 +56,37 @@ git commit -m "Inclui clientes sem pedidos pagos no relatorio"
 git push -u origin HEAD
 ```
 
-### 4. Abrir e revisar
+## 5. Pull Request
 
-No GitHub, abra um PR com base `main` e compare a branch da aula. O template solicita o requisito, a alteração, a validação e o uso de IA.
+No GitHub, abra um PR com base `main` e compare a branch de trabalho. O template reúne requisito, alteração, testes e uso da IA.
 
-Descrição sugerida, para adaptar às evidências reais:
+Uma descrição deve explicar o problema concreto e o resultado da mudança. Exemplo:
 
-> O relatório omitia clientes sem pedidos pagos. O filtro de status agora faz parte da condição ON do LEFT JOIN. O teste compara o resultado completo com o contrato e cobre o cenário sem pagamentos. As saídas da execução e as decisões registradas acompanham a mudança.
+> O relatório omitia clientes sem pedidos pagos. O filtro de status agora faz parte da condição ON do LEFT JOIN. Os testes comparam o resultado com o contrato e cobrem um cenário sem pagamentos. As evidências da execução acompanham a alteração.
 
-O check automatizado usa os mesmos arquivos SQL em um PostgreSQL novo no Docker. Compare a execução remota com a local. Check verde informa que os testes definidos passaram, não que toda regra possível de negócio foi comprovada.
+O check automatizado executa os testes em um PostgreSQL novo no Docker. A aprovação comprova os cenários definidos, sem substituir a revisão do requisito.
 
-Comentário de revisão sugerido: “Qual teste comprova que clientes com somente pedidos cancelados continuam aparecendo?”. A resposta deve apontar Bruno no contrato e a comparação do conjunto em `sql/03_testes.sql`.
+## 6. Revisão e ajustes
 
-### 5. Ajuste após comentário
+Questões para revisão:
 
-Se houver um pedido real de esclarecimento, altere a documentação ou o código correspondente. Rode os testes se mudou a consulta. Faça outro commit e push na mesma branch. O PR recebe o novo commit.
+- Qual teste garante a presença de clientes com apenas pedidos cancelados?
+- COUNT(p.id) e COUNT(*) produziriam os mesmos resultados?
+- O total zero de Diego preserva a contagem de seu pedido?
+- A evidência corresponde à definição de consulta aplicada?
+- As decisões com IA estão justificadas por resultados observáveis?
 
-O merge depende das regras do repositório e da revisão combinada. Deixe o PR de referência aberto para o encontro. Não é necessário fazer merge na aula.
+Após um pedido de ajuste, altere o arquivo correspondente, valide novamente quando necessário e envie outro commit na mesma branch. O PR recebe a atualização. O merge depende da revisão e das regras do repositório.
 
-## Trocar entre exemplo e correção
+O [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) apresenta uma solução de referência com evidência e check automatizado.
 
-Com a árvore de trabalho limpa:
+## Branch e estado do banco
+
+Trocar de branch altera os arquivos, mas não reaplica a consulta no PostgreSQL:
 
 ```bash
 git switch main
 bash demo.sh aplicar
-# Para consultar a branch corrigida de referência:
-git switch fix/clientes-sem-pagamento
-bash demo.sh aplicar
 ```
 
-Trocar a branch não altera o banco automaticamente. Para continuar com os exemplos novos, mantenha a branch de referência atualizada com a main.
-
-## Acesso dos alunos
-
-O repositório é privado. A participação oral não depende de clone. Quem quiser reproduzir ou abrir PR depois precisa de acesso concedido pelo proprietário, ou de uma cópia autorizada em outro repositório. Este material não adiciona colaboradores automaticamente.
+O acesso ao repositório privado é necessário para clone e envio de alterações. A discussão durante o workshop não exige entrega própria.

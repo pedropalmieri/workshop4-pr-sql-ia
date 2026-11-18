@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-# Ensaio automático de referência. Não altera os arquivos SQL nem o banco da aula.
+# Validação de conexão e consultas em um banco separado.
 set -euo pipefail
 cd "$(dirname "$0")/.."
-export WS4_PROJECT=ws4-ensaio
+export WS4_PROJECT=ws4-validacao
 trap 'bash demo.sh encerrar >/dev/null 2>&1 || true' EXIT
 bash demo.sh subir
 bash demo.sh conexao
@@ -38,4 +38,4 @@ bash demo.sh referencia
 bash demo.sh consultar
 bash demo.sh testar
 bash demo.sh contagem
-echo 'ENSAIO OK: falha esperada na consulta inicial e testes aprovados na referência.'
+echo 'VALIDAÇÃO OK: falha esperada na consulta inicial e testes aprovados na referência.'
