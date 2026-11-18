@@ -1,101 +1,83 @@
 # Conexão com PostgreSQL
 
-## Arquitetura da conexão
+## Arquitetura
 
-Os comandos do projeto abrem o cliente psql **dentro do contêiner**, conectando por TCP ao PostgreSQL em `127.0.0.1:5432`, com usuário `workshop`, banco `workshop` e a senha didática definida em `compose.yaml`. Não dependem de PostgreSQL ou psql instalado no computador.
+O projeto usa dois contêineres: PostgreSQL no serviço `db` e pgAdmin no serviço `pgadmin`. O navegador acessa **http://localhost:5050**. O pgAdmin conecta internamente a **db:5432**, na mesma rede Docker.
 
-Esse endereço é o localhost **do contêiner**. Nenhuma porta está publicada no Mac/Windows/Linux. Portanto, esses parâmetros não representam uma conexão direta a partir de Navicat, DBeaver ou outro cliente instalado no computador.
+O PostgreSQL não publica porta no computador. O endereço `127.0.0.1:5432` mostrado por `bash demo.sh conexao` pertence ao contêiner do banco e é usado pelo psql. Ele não é o endereço que deve ser cadastrado no pgAdmin.
 
 ## Servidor, banco, schema e cliente
 
 | Conceito | Neste projeto | Função |
 |---|---|---|
-| Servidor | Serviço Docker `db` | Executa o PostgreSQL e recebe conexões |
-| Banco | `workshop` | Banco selecionado na conexão |
-| Schema | `ws4` | Organiza os objetos dentro do banco |
-| Tabelas | `ws4.clientes` e `ws4.pedidos` | Armazenam os dados fictícios |
-| View | `ws4.resumo_clientes` | Define o relatório consultado, após aplicar o SQL |
-| Cliente SQL | `psql` no contêiner | Envia comandos e apresenta resultados |
+| Servidor | Serviço Docker db | Executa o PostgreSQL |
+| Banco | workshop | Banco selecionado na conexão |
+| Schema | ws4 | Organiza os objetos dentro do banco |
+| Tabelas | ws4.clientes e ws4.pedidos | Armazenam os dados fictícios |
+| View | ws4.resumo_clientes | Define o relatório após aplicar o SQL |
+| Interface gráfica | pgAdmin no navegador | Explora os objetos e executa consultas |
+| Cliente de terminal | psql no contêiner | Executa scripts e testes |
 
-A conexão seleciona o banco. O schema identifica objetos dentro dele. Por isso usamos nomes como `ws4.clientes` nas consultas, sem depender do search_path da sessão.
+A conexão seleciona o banco. O schema identifica objetos dentro dele. Usamos nomes como `ws4.clientes` sem depender do search_path da sessão.
 
-## Precisamos de pgAdmin?
-
-**Não para a prática deste workshop.** O psql já permite executar consultas, visualizar resultados e consultar a estrutura. O caminho principal usa somente Docker, terminal e editor.
-
-pgAdmin é uma interface gráfica opcional para administração e consulta do PostgreSQL. Ele não substitui o servidor nem é requisito para acessar um schema. O projeto não instala nem configura pgAdmin. Para usar uma interface gráfica no computador seria necessário configurar o acesso de rede apropriado. Tentar conectar o pgAdmin local a `localhost:5432` não alcança este banco, pois nenhuma porta foi publicada no host.
-
-Na atividade, use `bash demo.sh estrutura` para explorar os objetos e `bash demo.sh terminal` para as consultas. Não é necessário acrescentar uma instalação durante o encontro.
-
-## Verificação da conexão
-
-Na raiz do clone:
+## Preparar e conferir
 
 ```bash
-bash demo.sh subir
+bash demo.sh interface
+bash demo.sh base
+bash demo.sh aplicar
 bash demo.sh conexao
-```
-
-Confira na saída:
-
-| Campo | Esperado |
-|---|---|
-| Banco | workshop |
-| Usuário | workshop |
-| Endereço do servidor | 127.0.0.1 |
-| Porta | 5432 |
-| Versão | PostgreSQL 17.12 |
-
-O comando mostra a conexão estabelecida, não apenas o estado do contêiner. O healthcheck com pg_isready informa se o servidor aceita conexões, mas sozinho não comprova a senha ou a execução de SQL.
-
-O ambiente novo inicializa autenticação SCRAM para conexões TCP e locais. `scripts/validar-ambiente.sh` verifica conexão correta e exige recusa de uma senha incorreta, antes de carregar e testar as consultas. A senha no compose é exclusivamente didática.
-
-Depois de carregar os dados, confira o schema e as tabelas:
-
-```bash
-bash demo.sh base
 bash demo.sh estrutura
+bash scripts/validar-interface.sh
 ```
 
-A view aparece na listagem depois de `bash demo.sh aplicar`. A ausência da view antes desse comando não é um erro de conexão.
+No pgAdmin, o servidor **Workshop 4 - PostgreSQL** já está cadastrado. As credenciais da interface e a navegação pelo Query Tool estão em [pgAdmin](pgadmin.md). O usuário do banco é workshop e o schema é ws4. A view aparece após aplicar o SQL.
 
-## Executar uma consulta por vez
+O healthcheck com pg_isready informa se o servidor aceita conexões. `conexao` comprova a execução de SQL pelo psql. `validar-interface.sh` verifica HTTP, autenticação e consulta a partir do contêiner do pgAdmin.
+
+## Acesso pelo terminal, como alternativa
 
 ```bash
-bash demo.sh base
 bash demo.sh terminal
 ```
 
-O usuário didático criado pela imagem é superusuário, então o prompt padrão é `workshop=#`. Use:
+O usuário didático criado pela imagem é superusuário; o prompt padrão é `workshop=#`.
 
 ```sql
 \conninfo
-\pset null '(NULL)'
 SELECT current_database(), current_user;
 SELECT id, nome FROM ws4.clientes ORDER BY id;
 ```
 
-Agora execute os blocos de `exemplos/consultas-passo-a-passo.sql` individualmente. O ponto e vírgula termina uma instrução SQL. Se o prompt mudar para `workshop-#`, a instrução ainda está em composição. `\r` limpa o buffer atual. `\q` sai do psql e volta ao terminal do computador. O terminal do projeto exibe NULL como `(NULL)` e desativa a paginação para manter os resultados na tela.
+O ponto e vírgula termina uma instrução SQL. Se o prompt mudar para `workshop-#`, a instrução ainda está em composição. `\r` limpa o buffer e `\q` sai do psql. Esses comandos de barra invertida são exclusivos do psql. No Query Tool, utilize somente SQL, como os blocos de [consultas-pgadmin.sql](../exemplos/consultas-pgadmin.sql).
 
-Os comandos que começam com barra invertida pertencem ao psql, não ao SQL. A instrução SQL é executada pelo PostgreSQL. A distinção ajuda a explicar o que está acontecendo na tela.
+## Endereços e credenciais
 
-Para executar todos os blocos de uma vez, sem modo interativo:
-
-```bash
-bash demo.sh passos
-```
-
-## Quando algo falhar
-
-| Mensagem ou situação | Verificação |
+| Finalidade | Endereço ou credencial |
 |---|---|
-| Não conecta ao Docker | Abra o Docker Desktop e execute docker info |
-| Serviço db não está rodando | Execute bash demo.sh subir |
-| Password authentication failed | Confira banco, usuário e configuração da aula. Use os comandos do kit, que repassam a senha definida no contêiner |
-| Relação ws4.clientes não existe | Execute bash demo.sh base |
-| View ws4.resumo_clientes não existe | Execute bash demo.sh aplicar depois da base |
-| Contêiner saudável, mas consulta falha | A conexão e a correção da consulta são verificações diferentes. Leia o erro SQL e o contrato |
+| pgAdmin no navegador | localhost:5050 |
+| Login do pgAdmin | workshop@example.com / pgadmin_local |
+| PostgreSQL visto pelo pgAdmin | db:5432 |
+| Banco e usuário PostgreSQL | workshop / workshop |
+| Senha PostgreSQL | workshop_local |
+| PostgreSQL visto pelo psql dentro de db | 127.0.0.1:5432 |
 
-A mudança de autenticação exige inicialização de um contêiner novo. O `compose up` recria o serviço quando sua configuração muda. Como os dados são descartáveis, recarregue `base` e `aplicar` depois. Não use estes comandos para bancos pessoais ou de produção.
+As senhas são didáticas. O acesso à interface fica limitado ao próprio computador. O cadastro e a senha de conexão do banco são carregados na inicialização, conforme os arquivos de pgadmin/.
 
-Referências: [psql](https://www.postgresql.org/docs/current/app-psql.html) e [pgAdmin](https://www.pgadmin.org/docs/pgadmin4/latest/getting_started.html).
+## Persistência
+
+O volume pgadmin-data mantém as configurações e sessões da interface. Os dados PostgreSQL são descartáveis. Se o contêiner do banco for parado, recarregue base e aplicar. Uma troca de branch altera arquivos, sem reaplicar a definição da view automaticamente.
+
+## Problemas comuns
+
+| Situação | Verificação |
+|---|---|
+| Interface não abre | Confira o Docker e execute demo.sh interface |
+| Porta 5050 ocupada | Use PGADMIN_PORT=5051 bash demo.sh interface |
+| Login rejeitado | Use as credenciais da interface, não as do banco |
+| Servidor cadastrado não conecta | Host db, porta 5432 e banco workshop |
+| ws4.clientes não existe | Execute demo.sh base |
+| resumo_clientes não existe | Execute demo.sh aplicar depois de base |
+| Query Tool acusa erro em barra invertida | Utilize a versão consultas-pgadmin.sql |
+
+Referências: [psql](https://www.postgresql.org/docs/current/app-psql.html) e [pgAdmin em Docker](https://www.pgadmin.org/docs/pgadmin4/latest/container_deployment.html).

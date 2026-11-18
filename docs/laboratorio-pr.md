@@ -17,6 +17,8 @@ Use um nome diferente se a branch já existir. Preserve alterações próprias a
 
 ## 2. Reprodução do problema
 
+O resultado da consulta também pode ser acompanhado no pgAdmin. O terminal abaixo aplica a versão do arquivo e executa a validação.
+
 ```bash
 bash demo.sh subir
 bash demo.sh conexao

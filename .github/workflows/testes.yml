@@ -16,3 +16,19 @@ jobs:
       - name: Encerrar
         if: always()
         run: bash demo.sh encerrar
+  interface:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - name: Iniciar PostgreSQL e pgAdmin
+        run: bash demo.sh interface
+      - name: Carregar dados e consulta
+        run: |
+          bash demo.sh base
+          bash demo.sh aplicar
+      - name: Validar interface e conexao
+        run: bash scripts/validar-interface.sh
+      - name: Encerrar
+        if: always()
+        run: bash demo.sh encerrar

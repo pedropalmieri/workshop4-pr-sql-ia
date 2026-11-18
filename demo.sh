@@ -8,6 +8,8 @@ psql_ws() {
 }
 case "${1:-ajuda}" in
   subir) docker compose -p "$project" up -d --wait ;;
+  interface) docker compose -p "$project" --profile interface up -d --wait ;;
+  parar-interface) docker compose -p "$project" --profile interface stop pgadmin ;;
   base) psql_ws < sql/01_base.sql ;;
   estrutura) psql_ws < exemplos/explorar-estrutura.sql ;;
   conexao) psql_ws -c '\conninfo' -c 'SELECT current_database() AS banco, current_user AS usuario, inet_server_addr() AS endereco, inet_server_port() AS porta;' -c 'SHOW server_version;' ;;
@@ -21,7 +23,7 @@ case "${1:-ajuda}" in
   diagnosticar) psql_ws < exemplos/diagnostico-join.sql ;;
   contagem) psql_ws < exemplos/armadilha-count.sql ;;
   passos) psql_ws < exemplos/consultas-passo-a-passo.sql ;;
-  encerrar) docker compose -p "$project" down ;;
-  ajuda) echo 'Uso: bash demo.sh {subir|conexao|estrutura|terminal|base|aplicar|inicio|referencia|consultar|definicao|testar|diagnosticar|contagem|passos|encerrar}' ;;
+  encerrar) docker compose -p "$project" --profile interface down ;;
+  ajuda) echo 'Uso: bash demo.sh {subir|interface|parar-interface|conexao|estrutura|terminal|base|aplicar|inicio|referencia|consultar|definicao|testar|diagnosticar|contagem|passos|encerrar}' ;;
   *) echo 'Comando desconhecido. Use: bash demo.sh ajuda' >&2; exit 2 ;;
 esac
