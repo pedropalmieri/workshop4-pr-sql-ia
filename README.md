@@ -17,6 +17,8 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | Apresentação | [Slides](materiais/Workshop4-19nov2026.pptx) |
 | Interface gráfica e instalação Docker | [pgAdmin](docs/pgadmin.md) |
 | Ambiente e acesso ao banco | [Conexão PostgreSQL](docs/conexao-postgresql.md) |
+| Consultas com objetivo, explicação e resultado esperado | [Consultas explicadas](docs/consultas-explicadas.md) |
+| Como e por que a automação foi criada | [Arquitetura e decisões](docs/arquitetura-automacao.md) |
 | SELECT, filtros, JOIN e agregações | [Consultas passo a passo](docs/consultas-passo-a-passo.md) |
 | Exemplos numerados para executar no pgAdmin | [Sequência de demonstração](exemplos/demonstracao/README.md) |
 | Análise do problema e da solução | [SQL comentado](docs/sql-comentado.md) |
