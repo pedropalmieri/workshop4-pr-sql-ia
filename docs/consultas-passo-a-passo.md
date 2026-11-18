@@ -2,6 +2,8 @@
 
 O relatório de pedidos pagos pode ser construído por etapas. Cada consulta acrescenta um conceito e permite conferir o resultado antes de avançar.
 
+Os [exemplos numerados de demonstração](../exemplos/demonstracao/README.md) separam cada etapa em um arquivo SQL, incluindo o problema do filtro e a comparação da view com o contrato.
+
 Na interface gráfica, use os blocos de [consultas-pgadmin.sql](../exemplos/consultas-pgadmin.sql), executando um SELECT por vez no Query Tool do pgAdmin. A instalação e a conexão estão em [pgAdmin](pgadmin.md).
 
 A versão [consultas-passo-a-passo.sql](../exemplos/consultas-passo-a-passo.sql) acrescenta metacomandos exclusivos do psql. Ela funciona com `bash demo.sh passos` ou no terminal SQL. Não cole esses metacomandos no Query Tool.

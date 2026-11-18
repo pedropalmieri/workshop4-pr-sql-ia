@@ -18,6 +18,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A implem
 | Interface gráfica e instalação Docker | [pgAdmin](docs/pgadmin.md) |
 | Ambiente e acesso ao banco | [Conexão PostgreSQL](docs/conexao-postgresql.md) |
 | SELECT, filtros, JOIN e agregações | [Consultas passo a passo](docs/consultas-passo-a-passo.md) |
+| Exemplos numerados para executar no pgAdmin | [Sequência de demonstração](exemplos/demonstracao/README.md) |
 | Análise do problema e da solução | [SQL comentado](docs/sql-comentado.md) |
 | Validação e revisão | [Laboratório de Pull Request](docs/laboratorio-pr.md) |
 | Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
@@ -62,6 +63,8 @@ Abra **http://localhost:5050**.
 O servidor **Workshop 4 - PostgreSQL** já vem cadastrado com a conexão ao banco. Expanda **Workshop 4 > Workshop 4 - PostgreSQL > Bancos de dados > workshop** e abra **Ferramentas > Ferramenta de consulta** (Query Tool).
 
 Use os blocos de [consultas-pgadmin.sql](exemplos/consultas-pgadmin.sql), um SELECT por vez. O resultado aparece em Data Output. O guia [pgAdmin](docs/pgadmin.md) detalha a navegação, credenciais e solução de problemas.
+
+Para acompanhar cada conceito em um arquivo separado, use a [sequência numerada](exemplos/demonstracao/README.md): conexão, dados, filtros, JOINs, agregações e validação. Cada arquivo informa seu objetivo e o resultado esperado.
 
 O PostgreSQL é acessado pelo pgAdmin em **db:5432**, banco **workshop**, schema **ws4**. Somente a interface é publicada no computador em 127.0.0.1:5050. Os dados são fictícios e descartáveis. O repositório é privado e o clone exige acesso.
 
