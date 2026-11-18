@@ -8,7 +8,7 @@ Como verificar se uma consulta atende ao requisito, além de executar sem erros?
 
 O relatório precisa incluir **todos os clientes**, contar apenas pedidos pagos e mostrar zero quando não houver pagamento. O conjunto de dados inclui clientes sem pedidos, pedidos cancelados e um pedido pago de valor zero.
 
-O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versão inicial, preservada em `exemplos/consulta-com-erro.sql`, contém o problema de filtragem. O PR nº 1 registra a correção. O arquivo `sql/estado-demonstracao.txt` identifica o estado atual: `inicial` reproduz o defeito conhecido, e `corrigido` exige aprovação no contrato. Quando o arquivo não existe, vale `corrigido`.
+O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versão inicial, preservada em `exemplos/consulta-com-erro.sql`, contém o problema de filtragem. O [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) registra a correção, e o [PR nº 2](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/2) registra o retorno ao estado inicial, preservando o histórico. O arquivo `sql/estado-demonstracao.txt` identifica o estado atual: `inicial` reproduz o defeito conhecido, e `corrigido` exige aprovação no contrato. Quando o arquivo não existe, vale `corrigido`.
 
 ## Conteúdo
 
@@ -27,24 +27,24 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | Validação e revisão | [Laboratório de Pull Request](docs/laboratorio-pr.md) |
 | Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
 | IA como tutora: prompts para qualquer assistente | [Contexto único e prompts curtos](prompts/README.md) e [guia de uso](docs/prompts-tutora.md) |
-| Ferramenta e momento de uso da IA | [ChatGPT na atividade](docs/uso-da-ia.md) |
+| Ferramenta e momento de uso da IA | [Orientações de uso da IA](docs/uso-da-ia.md) |
 | Revisão SQL pelo Copilot: contexto e disponibilidade | [Configuração preparada e limitações do plano](docs/revisao-copilot.md) |
 | Registro de decisões | [Modelo](docs/registro-ia-modelo.md) e [exemplo ilustrativo](docs/registro-ia-exemplo.md) |
 
-## Escopo das operações SQL
+## Operações SQL do caso
 
-O briefing do Workshop 4 define PostgreSQL, fluxo de Pull Request, teste de consulta e registro de delegação e validação, com a IA no papel de Tutora. Ele não exige exercícios específicos de `UPDATE` ou `DELETE`. O caso deste repositório aplica esses objetivos à revisão de uma consulta `SELECT`.
+O trabalho relaciona uma consulta `SELECT`, seus testes e a revisão por Pull Request. A IA atua como Tutora, e o Fellow implementa, executa e registra a validação.
 
 - **Consulta e PR:** a alteração está na lógica de leitura do relatório, no arquivo `sql/02_consulta.sql`. Ela muda o resultado calculado, preservando os registros de clientes e pedidos.
-- **Preparação da base:** `sql/01_base.sql` cria e carrega os dados fictícios do exercício. Isso prepara o ambiente e não constitui uma entrega adicional.
+- **Preparação da base:** `sql/01_base.sql` cria e carrega os dados fictícios do exercício. A carga estabelece os quatro clientes e os cinco pedidos usados no contrato.
 - **UPDATE no teste:** `sql/03_testes.sql` cancela temporariamente os pedidos para verificar o cenário sem pagamentos. O `ROLLBACK` desfaz a alteração e mantém os dados originais.
-- **DELETE:** não há exercício de exclusão de registros. Nenhum PR adicional de alteração ou exclusão de dados é exigido pelo briefing.
+- **Exclusão de dados:** a análise do relatório não usa `DELETE`.
 
 ## Instalação com Docker: PostgreSQL e pgAdmin
 
 Requisitos: Docker Desktop em execução, navegador, Git, editor de texto e Bash. No Windows, use Git Bash ou WSL com integração do Docker. PostgreSQL, pgAdmin e psql executam em contêineres, sem instalação desses aplicativos no computador.
 
-Na raiz do clone, estes são os comandos Docker usados para baixar e iniciar os dois serviços:
+Para clonar o repositório e iniciar os dois serviços:
 
 ```bash
 git clone https://github.com/pedropalmieri/workshop4-pr-sql-ia.git
@@ -56,6 +56,8 @@ bash demo.sh aplicar
 ```
 
 Imagens: **postgres:17.12-alpine** e **dpage/pgadmin4:9.19**. O atalho `bash demo.sh interface` executa a inicialização via Compose. A opção `--wait` aguarda os serviços ficarem disponíveis. Um PostgreSQL já iniciado no projeto ws4-workshop é reutilizado.
+
+O comando `base` reinicializa os dados do exercício. Execute os comandos de carga na preparação do ambiente.
 
 Para conferir instalação e conexão:
 
@@ -94,7 +96,7 @@ bash demo.sh passos
 
 O arquivo `exemplos/consultas-passo-a-passo.sql` contém metacomandos psql, como comandos de barra invertida. Para o pgAdmin, utilize a versão SQL pura `exemplos/consultas-pgadmin.sql`.
 
-## Consulta inicial e testes
+## Consulta inicial, correção e testes
 
 Para reproduzir a falha sem modificar o arquivo versionado:
 
@@ -104,11 +106,17 @@ bash demo.sh consultar
 bash demo.sh testar
 ```
 
-O comando `inicio` aplica a versão com erro, e o teste deve falhar. Execute `bash demo.sh aplicar` para usar o SQL versionado. No estado `inicial`, `bash demo.sh testar` continua falhando por não atender ao contrato. O workflow verifica separadamente a reprodução autorizada do estado inicial. No estado `corrigido`, exige os dois testes do contrato. A [solução de referência](solucao/02_consulta.sql) e o [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) permitem comparar a alteração e suas evidências.
+O comando `inicio` aplica a versão com erro. O teste deve indicar `FAIL: resultado diferente do contrato`, com código de saída 3. Falhas de conexão ou de execução não representam a reprodução desse defeito.
+
+Execute `bash demo.sh aplicar` para usar o SQL versionado. No estado `inicial`, `bash demo.sh testar` continua falhando por não atender ao contrato. `bash scripts/testar-estado.sh` verifica a reprodução desse estado e confirma a falha conhecida. No estado `corrigido`, exige os dois cenários do contrato. A [solução de referência](solucao/02_consulta.sql) e o [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) permitem comparar a alteração e suas evidências.
 
 | Comando | Finalidade |
 |---|---|
 | `bash demo.sh interface` | Iniciar PostgreSQL e pgAdmin para uso no navegador |
+| `bash demo.sh aplicar` | Aplicar o SQL versionado ao banco |
+| `bash demo.sh consultar` | Exibir o relatório aplicado |
+| `bash demo.sh testar` | Verificar o contrato de negócio |
+| `bash scripts/testar-estado.sh` | Validar o estado declarado do exercício |
 | `bash demo.sh conexao` | Mostrar conexão, banco, usuário, porta e versão |
 | `bash demo.sh estrutura` | Listar o schema, objetos e campos do exercício |
 | `bash demo.sh diagnosticar` | Comparar as linhas produzidas pela junção |
@@ -137,11 +145,11 @@ O arquivo gerado inclui commit, alterações locais, SQL efetivamente aplicado e
 
 ## Aplicação após o merge
 
-O workflow **Testes SQL** valida o PR em um banco temporário. Após o merge com alteração SQL, **Aplicar main no banco de demonstracao** aplica e testa a consulta no PostgreSQL do laboratório, mantendo o banco disponível no pgAdmin. A aplicação só confirma a mudança se os testes do estado declarado passarem. O retorno ao estado `inicial` é explícito e não significa aprovação da regra de negócio. Aprovar o PR, por si só, não aplica o SQL: é necessário fazer o merge. Veja [o fluxo completo e a consulta do commit aplicado](docs/aplicacao-main.md).
+O workflow **Testes SQL** valida o PR em um banco temporário. Após o merge de um PR destinado à `main` com alteração em `sql/`, **Aplicar main no banco de demonstracao** aplica e testa a consulta no PostgreSQL do laboratório, mantendo o banco disponível no pgAdmin. A aplicação só confirma a mudança se os testes do estado declarado passarem. O retorno ao estado `inicial` é explícito e não significa aprovação da regra de negócio. Aprovar o PR, por si só, não aplica o SQL: é necessário fazer o merge. O acionamento manual está disponível na `main`. Um push direto ou uma mudança apenas em documentação não dispara essa aplicação. Veja [o fluxo completo e a consulta do commit aplicado](docs/aplicacao-main.md).
 
 ## Uso da IA
 
-Neste encontro, usaremos o **ChatGPT como Tutora**, em conversa de texto, principalmente após o teste revelar o problema da consulta inicial. O ChatGPT explica conceitos e ajuda a investigar o filtro, sem conexão ao banco. A implementação, a execução e a validação ficam com a pessoa que está desenvolvendo. Veja [qual IA usar e em que momento](docs/uso-da-ia.md).
+Use o **ChatGPT ou outro assistente de linguagem como Tutora**, em conversa de texto, após observar o resultado da consulta e do teste. A IA explica conceitos e ajuda a investigar o filtro a partir do contexto enviado, sem acesso ao banco. A implementação, a execução e a validação ficam com a pessoa que está desenvolvendo. Veja [qual IA usar e em que momento](docs/uso-da-ia.md).
 
 Registre tarefa delegada, motivo, orientação recebida, decisão, evidência e retrabalho. Use o modelo para suas interações reais. O exemplo disponível é fictício e está identificado como ilustração.
 
@@ -156,7 +164,7 @@ docker compose -p ws4-workshop --profile interface down
 # Equivalente: bash demo.sh encerrar
 ```
 
-O volume de configuração do pgAdmin permanece. Como o banco é descartável, recarregue base e aplicar na próxima inicialização.
+O volume de configuração do pgAdmin permanece. Os dados do PostgreSQL ficam em armazenamento temporário. Após encerrar ou recriar seu contêiner, execute `bash demo.sh base` e `bash demo.sh aplicar` para preparar novamente o exercício.
 
 ## Referências
 

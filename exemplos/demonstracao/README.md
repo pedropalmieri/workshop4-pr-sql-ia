@@ -4,13 +4,15 @@ Sequência de exemplos do Workshop 4 para explorar o banco, construir o relatór
 
 ## Preparação
 
-Na raiz do repositório:
+Na raiz do repositório, com Docker Desktop em execução:
 
 ```bash
 bash demo.sh interface
 bash demo.sh base
 bash demo.sh inicio
 ```
+
+O comando `base` reinicializa os dados fictícios. O comando `inicio` aplica a consulta com o defeito conhecido, sem alterar o arquivo versionado.
 
 Abra o [pgAdmin](http://localhost:5050), conecte ao servidor **Workshop 4 - PostgreSQL**, selecione o banco **workshop** e abra **Ferramentas > Ferramenta de consulta**. Os dados de acesso estão no [guia do pgAdmin](../../docs/pgadmin.md).
 
@@ -37,7 +39,7 @@ As etapas 01 a 08 constroem a explicação principal. As etapas 09 e 10 aprofund
 
 A etapa 08 calcula o resultado de um SELECT, sem atualizar o relatório aplicado no banco. A etapa 10 compara esse relatório com o contrato. Portanto, executar a etapa 08 não transforma o FAIL da etapa 10 em PASS.
 
-A solução correta está em `solucao/02_consulta.sql`: o filtro de status está no ON. Compare com `exemplos/consulta-com-erro.sql`. O estado versionado em `sql/estado-demonstracao.txt` informa se o exercício está no início ou corrigido. Para conferir a correção, altere `sql/02_consulta.sql`, declare `corrigido` nesse arquivo de estado e execute:
+A solução correta está em [solucao/02_consulta.sql](../../solucao/02_consulta.sql): o filtro de status está no ON. Para analisar somente a consulta, use [consulta-inicial.sql](../consulta-inicial.sql). O estado versionado em `sql/estado-demonstracao.txt` informa se o exercício está no início ou corrigido. Para conferir a correção, altere `sql/02_consulta.sql`, declare `corrigido` nesse arquivo de estado e execute:
 
 ```bash
 bash demo.sh aplicar
@@ -50,7 +52,7 @@ Depois, execute novamente a etapa 10 no pgAdmin. Com a correção aplicada, o re
 
 ## IA na análise
 
-O ChatGPT atua como tutora após observar o problema da etapa 06 e o teste com falha. A explicação recebida deve ser confrontada com os dados, o contrato e os testes. A alteração e a execução ficam com quem está desenvolvendo. Os [prompts](../../docs/prompts-tutora.md) e o [registro de decisões](../../docs/registro-ia-modelo.md) complementam a atividade.
+O ChatGPT ou outro assistente de linguagem atua como Tutora após observar o problema da etapa 06 e o teste com falha. A explicação recebida deve ser confrontada com os dados, o contrato e os testes. A alteração e a execução ficam com quem está desenvolvendo. Os [prompts](../../docs/prompts-tutora.md) e o [registro de decisões](../../docs/registro-ia-modelo.md) complementam a atividade.
 
 ## Referências do projeto
 

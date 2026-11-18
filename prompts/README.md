@@ -6,7 +6,7 @@ O contexto do caso é enviado uma vez. Depois, cada pergunta fica em um prompt c
 
 1. Envie [00 · Contexto do caso](00-contexto-do-caso.txt) ao iniciar a conversa.
 2. Escolha uma tarefa abaixo. Substitua os campos entre colchetes por SQL, resultados ou evidências reais e envie o prompt na mesma conversa.
-3. Confira a resposta com os dados e os testes. O Fellow implementa, executa e decide.
+3. Confira a resposta com os dados e os testes. O Fellow implementa, executa e decide. A resposta da IA deve ser conferida com evidências da tarefa.
 
 Ao abrir outra conversa ou mudar de ferramenta, envie novamente o contexto 00. Os prompts curtos dependem desse contexto; não precisam repetir as tabelas e as regras em cada pergunta.
 
