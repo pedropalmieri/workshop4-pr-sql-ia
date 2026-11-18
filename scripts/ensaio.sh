@@ -5,7 +5,21 @@ cd "$(dirname "$0")/.."
 export WS4_PROJECT=ws4-ensaio
 trap 'bash demo.sh encerrar >/dev/null 2>&1 || true' EXIT
 bash demo.sh subir
+bash demo.sh conexao
+echo 'Autenticação: uma senha incorreta deve ser recusada.'
+if docker compose -p "$WS4_PROJECT" exec -T db sh -c \
+  'PGPASSWORD=senha_incorreta_de_teste psql -X -h 127.0.0.1 -U "$POSTGRES_USER" -d "$POSTGRES_DB" -c "SELECT 1"'; then
+  echo 'ERRO: o servidor aceitou a senha incorreta.' >&2
+  exit 1
+else
+  codigo=$?
+  if [ "$codigo" -ne 2 ]; then
+    echo "ERRO: falha inesperada na conexão de teste, código $codigo." >&2
+    exit "$codigo"
+  fi
+fi
 bash demo.sh base
+bash demo.sh passos
 bash demo.sh inicio
 echo 'Consulta inicial: devem aparecer Ana e Diego.'
 bash demo.sh consultar

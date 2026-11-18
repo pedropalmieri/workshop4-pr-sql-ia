@@ -13,6 +13,8 @@ O encontro **não tem entregável próprio**. A atividade prepara as evidências
 | Apresentação editável com notas de fala | [PowerPoint, 13 slides](materiais/Workshop4-19nov2026-v1.pptx) |
 | Cronograma de 55 minutos | [Roteiro do instrutor](materiais/roteiro-do-instrutor.md) |
 | Preparação, comandos e recuperação | [Guia de condução](materiais/guia-de-conducao.md) |
+| Conexão TCP, autenticação e terminal SQL | [Conexão PostgreSQL](docs/conexao-postgresql.md) |
+| Explicação de cada etapa da consulta | [Sequência de SQL para a aula](materiais/explicacao-das-consultas.md) |
 | Participação da turma, sem entrega obrigatória | [Atividade de 5 minutos](docs/atividade-da-turma.md) |
 | Explicação do erro e da correção | [SQL comentado](docs/sql-comentado.md) |
 | Perguntas e respostas esperadas | [Gabarito do instrutor](materiais/perguntas-e-gabarito.md) |
@@ -39,6 +41,7 @@ Requisitos locais: **Docker Desktop em execução, Git, editor e Bash**. Windows
 git clone https://github.com/pedropalmieri/workshop4-pr-sql-ia.git
 cd workshop4-pr-sql-ia
 bash demo.sh subir
+bash demo.sh conexao
 bash demo.sh base
 bash demo.sh aplicar
 bash demo.sh consultar
@@ -56,6 +59,8 @@ Todos os comandos partem da raiz do repositório.
 | Comando | O que faz |
 |---|---|
 | `bash demo.sh subir` | Inicia o PostgreSQL e aguarda disponibilidade |
+| `bash demo.sh conexao` | Valida conexão TCP e mostra banco, usuário, porta e versão |
+| `bash demo.sh terminal` | Abre o psql interativo para executar SQL por etapas |
 | `bash demo.sh base` | Recarrega os quatro clientes e cinco pedidos |
 | `bash demo.sh aplicar` | Aplica a consulta do arquivo que você está editando |
 | `bash demo.sh consultar` | Mostra o relatório ordenado por cliente |
@@ -63,6 +68,7 @@ Todos os comandos partem da raiz do repositório.
 | `bash demo.sh testar` | Valida o contrato e um segundo cenário |
 | `bash demo.sh diagnosticar` | Mostra as linhas antes do filtro e com status no ON |
 | `bash demo.sh contagem` | Compara COUNT(*) e COUNT(p.id), soma e COALESCE |
+| `bash demo.sh passos` | Executa seis consultas progressivas de leitura e agregação |
 | `bash demo.sh inicio` | Aplica o erro congelado de exemplos/, sem editar arquivos |
 | `bash demo.sh referencia` | Aplica o gabarito de solucao/, sem editar arquivos |
 | `bash demo.sh encerrar` | Remove somente os recursos Docker do projeto da aula |
@@ -75,7 +81,9 @@ Todos os comandos partem da raiz do repositório.
 bash scripts/ensaio.sh
 ```
 
-O ensaio usa outro projeto Docker, `ws4-ensaio`. Verifica o erro conhecido, executa os exemplos, aplica a referência e exige aprovação nos testes. Ao terminar, remove esse ambiente separado. Não altera os arquivos nem o banco `ws4-workshop` da aula.
+O ensaio usa outro projeto Docker, `ws4-ensaio`. Valida conexão TCP com senha correta, exige recusa de senha incorreta, executa as seis consultas progressivas, verifica o erro conhecido e exige aprovação da referência nos testes. Ao terminar, remove esse ambiente separado. Não altera os arquivos nem o banco `ws4-workshop` da aula.
+
+As saídas reais da validação de 17/11 estão em [conexão e consultas](docs/validacao/conexao-e-consultas-20261117.txt). O FATAL de senha incorreta e o FAIL da consulta inicial são verificações negativas esperadas. A conexão da aula usa o cliente dentro do Docker. Não há porta publicada para um cliente gráfico no computador.
 
 ## Evidência da sua execução
 

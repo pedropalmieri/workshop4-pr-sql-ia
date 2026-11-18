@@ -66,71 +66,11 @@ Até 60 minutos: use a margem para perguntas ou um atraso pequeno. Se a demonstr
 
 ## Demonstração, minuto a minuto
 
-### 16–19: contexto e branch
+A sequência atual reserva 18 dos 25 minutos de demonstração para conexão, leitura do SQL, diagnóstico e correção. Use a tabela no [guia de condução](guia-de-conducao.md) e as falas em [explicação das consultas](explicacao-das-consultas.md). Os 2 minutos seguintes cobrem evidências e os 5 finais cobrem o PR.
 
-Mostre `docs/contrato.md`, as tabelas de `sql/01_base.sql` e o filtro de `sql/02_consulta.sql`. Explique as chaves e a relação de um cliente com muitos pedidos. Crie a branch:
+Antes de compartilhar a tela, valide `bash demo.sh conexao`. Para executar uma consulta por vez, use `bash demo.sh terminal`. Os seis blocos de `exemplos/consultas-passo-a-passo.sql` explicam SELECT, FROM, WHERE, chaves e JOINs, GROUP BY, COUNT, SUM e COALESCE. Não é necessário ensinar os detalhes do bloco DO dos testes durante a hora.
 
-```bash
-git switch -c fix/clientes-sem-pagamento
-bash demo.sh base
-bash demo.sh aplicar
-bash demo.sh consultar
-```
-
-Saída esperada: Ana com 2 e 150.00. Diego com 1 e 0.00. Bruno e Carla não aparecem.
-
-### 19–22: teste que revela a falha
-
-```bash
-bash demo.sh testar
-echo $?
-```
-
-Mostre o `FAIL` e o código diferente de zero. Abra o teste e explique apenas o necessário: comparação contra valores esperados, nas duas direções. Não transforme a aula em uma explicação de PL/pgSQL.
-
-### 22–26: IA tutora
-
-Use o primeiro prompt de `docs/prompts-tutora.md`. Leia a explicação e peça que a turma diga onde a regra está quebrando. Se a IA tentar entregar SQL pronto, peça que retorne às perguntas e à explicação conceitual. Você pode consultar o chat, mas não acionar edição automática dos arquivos.
-
-Fala de apoio: “A condição ON decide quais pedidos combinam com o cliente. O WHERE filtra o resultado da junção. Carla fica com colunas de pedido nulas. Bruno só tem cancelado. O filtro posterior elimina ambos.”
-
-### 26–30: correção humana
-
-No editor, mova o filtro de status para o `ON`, unido por `AND`, e remova o `WHERE`. Mantenha as outras expressões. Execute:
-
-```bash
-bash demo.sh aplicar
-bash demo.sh consultar
-bash demo.sh testar
-```
-
-Agora existem quatro linhas e dois avisos `PASS`. Mostre que Diego tem um pedido pago de valor zero. Se necessário, compare com `solucao/02_consulta.sql`, identificando-a como referência previamente preparada pelo instrutor.
-
-### 30–34: evidência e registro
-
-Use o bloco de captura do README para criar `docs/evidencias.txt`. Copie o modelo:
-
-```bash
-cp docs/registro-ia-modelo.md docs/registro-ia.md
-```
-
-Preencha no editor a tarefa delegada, motivo, orientação aceita, resultado dos testes e retrabalho humano. Discuta alternativas com o terceiro prompt. Registre uma rejeição somente se ela de fato ocorrer. Se o tempo ou a resposta não permitirem, mostre `registro-ia-exemplo.md` como **simulação didática** e explique como o aluno documentará as interações reais no desafio.
-
-### 34–41: commit e PR
-
-```bash
-git diff -- sql/02_consulta.sql
-git status --short
-git add sql/02_consulta.sql docs/evidencias.txt docs/registro-ia.md
-git commit -m "Corrige inclusao de clientes sem pedidos pagos"
-git push -u origin fix/clientes-sem-pagamento
-```
-
-No GitHub, abra o PR da branch para `main`. Título sugerido: “Inclui clientes sem pedidos pagos no relatório”. O template deve aparecer porque `.github` está na raiz do repositório. Preencha problema, alteração, comandos/saídas e registro de IA. Mostre Files changed e o resultado dos testes locais. Se o check remoto já tiver terminado, mostre-o. Se ainda estiver rodando, explique a diferença entre validação local concluída e check remoto pendente.
-
-Pergunta de revisão: “Onde o teste garante que Carla aparece?” A resposta aponta para a linha esperada no contrato e a comparação completa do conjunto. Um colega pode comentar e pedir um esclarecimento real. Em apresentação solo, descreva a revisão com a turma sem fingir aprovação independente.
-
-Se houver ajuste documental solicitado, edite, faça um novo commit e push na mesma branch, demonstrando a atualização do PR. Explique que o merge depende da revisão e das regras do repositório. Não é necessário realizar o merge na aula.
+Os comandos de branch, commit, push e revisão estão no [laboratório Git](../docs/laboratorio-pr.md). O exemplo de registro da IA continua identificado como simulação, sem substituir as interações reais.
 
 ## Gabarito da discussão
 
