@@ -87,10 +87,10 @@ Essa é uma escolha de representação deste relatório. Não significa que aus�
 
 ## Análise da consulta inicial
 
-Em [sql/02_consulta.sql](../sql/02_consulta.sql), o filtro de status está no WHERE após o LEFT JOIN. Isso elimina clientes que deveriam permanecer no resultado. Compare com os blocos acima e com o [contrato](contrato.md).
+Em [exemplos/consulta-com-erro.sql](../exemplos/consulta-com-erro.sql), o filtro de status está no WHERE após o LEFT JOIN. A versão corrigida está em [sql/02_consulta.sql](../sql/02_consulta.sql). Isso elimina clientes que deveriam permanecer no resultado. Compare com os blocos acima e com o [contrato](contrato.md).
 
 ```bash
-bash demo.sh aplicar
+bash demo.sh inicio
 bash demo.sh consultar
 bash demo.sh testar
 bash demo.sh diagnosticar

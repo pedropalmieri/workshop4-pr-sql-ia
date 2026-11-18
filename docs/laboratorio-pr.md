@@ -1,5 +1,7 @@
 # Laboratório: validação e revisão de uma consulta
 
+O PR nº 1 já foi mesclado, e a main contém a consulta corrigida. O fluxo abaixo documenta a correção e serve de referência para novas alterações. A reprodução da falha usa `bash demo.sh inicio`, sem modificar o arquivo versionado. Não é necessário reenviar uma correção já incorporada.
+
 O fluxo registra uma mudança de SQL, suas evidências e a justificativa das decisões. Os comandos usam Bash e partem da raiz do repositório.
 
 ## 1. Branch de trabalho
@@ -23,12 +25,12 @@ O resultado da consulta também pode ser acompanhado no pgAdmin. O terminal abai
 bash demo.sh subir
 bash demo.sh conexao
 bash demo.sh base
-bash demo.sh aplicar
+bash demo.sh inicio
 bash demo.sh consultar
 bash demo.sh testar
 ```
 
-Na implementação inicial, o teste falha porque há clientes ausentes. Compare o resultado com o [contrato](contrato.md), investigue a condição de junção e faça a alteração em `sql/02_consulta.sql`.
+Na implementação inicial aplicada por `inicio`, o teste falha porque há clientes ausentes. Compare `exemplos/consulta-com-erro.sql` com a correção atual de `sql/02_consulta.sql` e o [contrato](contrato.md). Novos PRs devem conter alterações ainda não incorporadas à main.
 
 ## 3. Validação e evidência
 

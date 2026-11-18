@@ -9,7 +9,7 @@ Na raiz do repositório:
 ```bash
 bash demo.sh interface
 bash demo.sh base
-bash demo.sh aplicar
+bash demo.sh inicio
 ```
 
 Abra o [pgAdmin](http://localhost:5050), conecte ao servidor **Workshop 4 - PostgreSQL**, selecione o banco **workshop** e abra **Ferramentas > Ferramenta de consulta**. Os dados de acesso estão no [guia do pgAdmin](../../docs/pgadmin.md).
@@ -37,7 +37,7 @@ As etapas 01 a 08 constroem a explicação principal. As etapas 09 e 10 aprofund
 
 A etapa 08 executa um SELECT correto, mas não altera a view. A etapa 10 verifica a view que está realmente aplicada no banco. Portanto, executar a etapa 08 não transforma o FAIL da etapa 10 em PASS.
 
-Para corrigir a implementação, altere `sql/02_consulta.sql`, movendo o filtro de status para o ON, e execute:
+A correção já está na `main` em `sql/02_consulta.sql`: o filtro de status está no ON. Compare esse arquivo com `exemplos/consulta-com-erro.sql`. Para aplicar a versão corrigida ao banco e conferir os resultados:
 
 ```bash
 bash demo.sh aplicar
@@ -46,7 +46,7 @@ bash demo.sh testar
 bash scripts/registrar-evidencia.sh
 ```
 
-Depois, execute novamente a etapa 10 no pgAdmin. Com a correção aplicada, o resultado deve ser PASS e zero diferenças. Inclua o arquivo SQL corrigido e as evidências no Pull Request, conforme o [laboratório](../../docs/laboratorio-pr.md).
+Depois, execute novamente a etapa 10 no pgAdmin. Com a correção aplicada, o resultado deve ser PASS e zero diferenças. O [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) preserva o diff e as evidências da correção já incorporada. Para novas alterações, use o fluxo do [laboratório](../../docs/laboratorio-pr.md).
 
 ## IA na análise
 

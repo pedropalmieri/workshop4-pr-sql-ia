@@ -8,7 +8,7 @@ Como verificar se uma consulta atende ao requisito, além de executar sem erros?
 
 O relatório precisa incluir **todos os clientes**, contar apenas pedidos pagos e mostrar zero quando não houver pagamento. O conjunto de dados inclui clientes sem pedidos, pedidos cancelados e um pedido pago de valor zero.
 
-O [contrato da consulta](docs/contrato.md) define o resultado esperado. A implementação inicial contém um problema de filtragem que será analisado ao longo da atividade.
+O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versão inicial, preservada em `exemplos/consulta-com-erro.sql`, contém o problema de filtragem. A `main` já inclui a correção do PR nº 1.
 
 ## Conteúdo
 
@@ -83,13 +83,15 @@ O arquivo `exemplos/consultas-passo-a-passo.sql` contém metacomandos psql, como
 
 ## Consulta inicial e testes
 
+Para reproduzir a falha sem modificar o arquivo versionado:
+
 ```bash
-bash demo.sh aplicar
+bash demo.sh inicio
 bash demo.sh consultar
 bash demo.sh testar
 ```
 
-Na `main`, o teste deve falhar: a consulta inicial omite clientes exigidos pelo contrato. Depois da correção, os dois cenários de teste devem passar. A [solução de referência](solucao/02_consulta.sql) e o [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) permitem comparar a alteração e suas evidências.
+O comando `inicio` aplica a versão com erro, e o teste deve falhar. A `main` está corrigida: execute `bash demo.sh aplicar` e `bash demo.sh testar` para reaplicar a versão atual e verificar os dois cenários. A [solução de referência](solucao/02_consulta.sql) e o [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) permitem comparar a alteração e suas evidências.
 
 | Comando | Finalidade |
 |---|---|

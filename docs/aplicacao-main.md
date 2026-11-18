@@ -29,7 +29,7 @@ Aprovação, merge e aplicação são eventos distintos. Fechar um PR sem merge 
 
 ## Estado inicial do exercício
 
-A consulta inicial da `main` contém o erro intencional do exercício. Enquanto ela não for corrigida, a aplicação automática será rejeitada pelos testes e manterá o banco anterior. O comportamento esperado após o PR da correção é passar nos testes e apresentar os quatro clientes.
+O PR nº 1 já foi mesclado. A `main` contém a consulta corrigida, e sua aplicação automática passou nos testes, apresentando os quatro clientes. A versão com erro permanece em `exemplos/consulta-com-erro.sql`. Uma futura aplicação que viole o contrato será rejeitada, mantendo a consulta anterior no banco.
 
 Para colocar apenas o banco no estado inicial antes de uma demonstração:
 
@@ -38,7 +38,7 @@ bash demo.sh inicio
 bash demo.sh consultar
 ```
 
-Esse comando não muda o arquivo versionado nem faz push. O próximo merge com alteração SQL aplica o conteúdo da `main`.
+Esse comando não muda o arquivo versionado nem faz push. Para retornar à consulta corrigida, use `bash demo.sh aplicar` ou execute manualmente o workflow da main. Um novo merge com alteração SQL também aplica a versão correspondente.
 
 ## Disponibilidade
 
