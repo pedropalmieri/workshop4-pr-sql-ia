@@ -87,7 +87,7 @@ Essa é uma escolha de representação deste relatório. Não significa que aus�
 
 ## Análise da consulta inicial
 
-Em [exemplos/consulta-com-erro.sql](../exemplos/consulta-com-erro.sql), o filtro de status está no WHERE após o LEFT JOIN. A versão corrigida está em [sql/02_consulta.sql](../sql/02_consulta.sql). Isso elimina clientes que deveriam permanecer no resultado. Compare com os blocos acima e com o [contrato](contrato.md).
+Em [exemplos/consulta-com-erro.sql](../exemplos/consulta-com-erro.sql), o filtro de status está no WHERE após o LEFT JOIN. A solução de referência está em [solucao/02_consulta.sql](../solucao/02_consulta.sql). O estado versionado do exercício está em `sql/estado-demonstracao.txt`. Isso elimina clientes que deveriam permanecer no resultado. Compare com os blocos acima e com o [contrato](contrato.md).
 
 ```bash
 bash demo.sh inicio

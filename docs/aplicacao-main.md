@@ -21,7 +21,7 @@ O segundo SELECT identifica o commit e a execução que aplicaram a consulta. Os
 
 ## Aplicação com validação na mesma transação
 
-O script `scripts/aplicar-no-banco.sh` executa a consulta de `sql/02_consulta.sql` e os testes de `sql/03_testes.sql` na mesma transação. O cenário que cancela os pedidos usa um savepoint e restaura os dados antes de concluir. Se qualquer teste falhar, o PostgreSQL desfaz a aplicação, incluindo a alteração da consulta. A execução do workflow fica com falha e a versão anterior permanece no banco.
+No estado `corrigido`, o script `scripts/aplicar-no-banco.sh` executa a consulta de `sql/02_consulta.sql` e os testes de `sql/03_testes.sql` na mesma transação. O cenário que cancela os pedidos usa um savepoint e restaura os dados antes de concluir. Se qualquer teste falhar, o PostgreSQL desfaz a aplicação, incluindo a alteração da consulta. A execução do workflow fica com falha e a versão anterior permanece no banco.
 
 A aplicação não carrega `sql/01_base.sql`, não recria o banco e não encerra os serviços. Ela exige o laboratório previamente inicializado. As execuções são serializadas pelo workflow e por uma trava transacional no PostgreSQL.
 
@@ -29,7 +29,16 @@ Aprovação, merge e aplicação são eventos distintos. Fechar um PR sem merge 
 
 ## Estado inicial do exercício
 
-O PR nº 1 já foi mesclado. A `main` contém a consulta corrigida, e sua aplicação automática passou nos testes, apresentando os quatro clientes. A versão com erro permanece em `exemplos/consulta-com-erro.sql`. Uma futura aplicação que viole o contrato será rejeitada, mantendo a consulta anterior no banco.
+O PR nº 1 foi mesclado e aplicou a correção com sucesso. O retorno para o início do exercício é uma nova alteração versionada e mantém esse histórico.
+
+`sql/estado-demonstracao.txt` declara o estado esperado:
+
+- `corrigido` (também o padrão sem arquivo): exige os dois cenários do contrato. Uma consulta incorreta é rejeitada e desfeita.
+- `inicial`: exige que `sql/02_consulta.sql` seja idêntico a `exemplos/consulta-com-erro.sql`. Aplica somente essa versão original e verifica Ana e Diego, preservando a base. O resumo informa que o contrato NÃO é atendido. O teste `bash demo.sh testar` continua falhando, como deve ocorrer antes da correção.
+
+O workflow de PR também confirma a falha do contrato no estado inicial. O teste de reprodução não transforma essa falha funcional em aprovação.
+
+Para uma nova correção por PR, altere o SQL e mude o estado para `corrigido` no mesmo PR. Depois do merge, o workflow aplica a versão e exige o contrato completo.
 
 Para colocar apenas o banco no estado inicial antes de uma demonstração:
 
@@ -47,3 +56,7 @@ Docker Desktop, PostgreSQL e o executor precisam estar ligados. O executor não 
 O banco atual usa armazenamento temporário: a automação o preserva, mas encerrar ou recriar o contêiner do PostgreSQL descarta os dados. O pgAdmin mantém sua configuração. Consulte [instalação e credenciais](../README.md) e [configuração do executor](../infra/runner/README.md).
 
 Referências: [eventos de workflow](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows) e [executores próprios](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/use-in-a-workflow).
+
+## Validação isolada da automação
+
+Com a imagem do executor preparada, execute `bash scripts/validar-aplicacao.sh`. O comando usa outro banco e testa retorno inicial, aplicação correta, rollback da consulta inválida, bloqueio de um SQL diferente do original no modo inicial e preservação dos dados. O banco da apresentação não é alterado.

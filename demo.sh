@@ -20,10 +20,11 @@ case "${1:-ajuda}" in
   consultar) psql_ws -c 'SELECT * FROM ws4.resumo_clientes ORDER BY id;' ;;
   definicao) psql_ws -c "SELECT pg_get_viewdef('ws4.resumo_clientes'::regclass, true);" ;;
   testar) psql_ws < sql/03_testes.sql ;;
+  testar-inicio) psql_ws < sql/04_testes_estado_inicial.sql ;;
   diagnosticar) psql_ws < exemplos/diagnostico-join.sql ;;
   contagem) psql_ws < exemplos/armadilha-count.sql ;;
   passos) psql_ws < exemplos/consultas-passo-a-passo.sql ;;
   encerrar) docker compose -p "$project" --profile interface down ;;
-  ajuda) echo 'Uso: bash demo.sh {subir|interface|parar-interface|conexao|estrutura|terminal|base|aplicar|inicio|referencia|consultar|definicao|testar|diagnosticar|contagem|passos|encerrar}' ;;
+  ajuda) echo 'Uso: bash demo.sh {subir|interface|parar-interface|conexao|estrutura|terminal|base|aplicar|inicio|referencia|consultar|definicao|testar|testar-inicio|diagnosticar|contagem|passos|encerrar}' ;;
   *) echo 'Comando desconhecido. Use: bash demo.sh ajuda' >&2; exit 2 ;;
 esac

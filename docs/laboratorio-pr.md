@@ -1,6 +1,6 @@
 # Laboratório: validação e revisão de uma consulta
 
-O PR nº 1 já foi mesclado, e a main contém a consulta corrigida. O fluxo abaixo documenta a correção e serve de referência para novas alterações. A reprodução da falha usa `bash demo.sh inicio`, sem modificar o arquivo versionado. Não é necessário reenviar uma correção já incorporada.
+O PR nº 1 já foi mesclado e registra a correção. O estado atual do exercício está em `sql/estado-demonstracao.txt`. O fluxo abaixo documenta a correção e serve de referência para novas alterações. A reprodução da falha usa `bash demo.sh inicio`, sem modificar o arquivo versionado. Quando o estado estiver `inicial`, uma nova correção precisa mudar o SQL e declarar `corrigido` no mesmo PR.
 
 O fluxo registra uma mudança de SQL, suas evidências e a justificativa das decisões. Os comandos usam Bash e partem da raiz do repositório.
 
@@ -30,7 +30,7 @@ bash demo.sh consultar
 bash demo.sh testar
 ```
 
-Na implementação inicial aplicada por `inicio`, o teste falha porque há clientes ausentes. Compare `exemplos/consulta-com-erro.sql` com a correção atual de `sql/02_consulta.sql` e o [contrato](contrato.md). Novos PRs devem conter alterações ainda não incorporadas à main.
+Na implementação inicial aplicada por `inicio`, o teste falha porque há clientes ausentes. Compare `exemplos/consulta-com-erro.sql` com a correção atual de `sql/02_consulta.sql` e o [contrato](contrato.md). Para corrigir a versão inicial, altere o SQL e grave `corrigido` em `sql/estado-demonstracao.txt`. Novos PRs devem conter alterações ainda não incorporadas à main.
 
 ## 3. Validação e evidência
 
@@ -49,7 +49,7 @@ O arquivo gerado contém a definição efetivamente aplicada no banco e as saíd
 ```bash
 git diff -- sql/02_consulta.sql
 git status --short
-git add sql/02_consulta.sql docs/registro-ia.md
+git add sql/02_consulta.sql sql/estado-demonstracao.txt docs/registro-ia.md
 ```
 
 Inclua também a evidência usando `git add` seguido do caminho exato impresso pelo script. Confira o conteúdo antes de confirmar:

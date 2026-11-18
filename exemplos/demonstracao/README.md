@@ -37,7 +37,7 @@ As etapas 01 a 08 constroem a explicação principal. As etapas 09 e 10 aprofund
 
 A etapa 08 executa um SELECT correto, mas não altera a view. A etapa 10 verifica a view que está realmente aplicada no banco. Portanto, executar a etapa 08 não transforma o FAIL da etapa 10 em PASS.
 
-A correção já está na `main` em `sql/02_consulta.sql`: o filtro de status está no ON. Compare esse arquivo com `exemplos/consulta-com-erro.sql`. Para aplicar a versão corrigida ao banco e conferir os resultados:
+A solução correta está em `solucao/02_consulta.sql`: o filtro de status está no ON. Compare com `exemplos/consulta-com-erro.sql`. O estado versionado em `sql/estado-demonstracao.txt` informa se o exercício está no início ou corrigido. Para conferir a correção, altere `sql/02_consulta.sql`, declare `corrigido` nesse arquivo de estado e execute:
 
 ```bash
 bash demo.sh aplicar
