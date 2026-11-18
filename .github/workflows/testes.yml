@@ -11,8 +11,8 @@ jobs:
         run: bash demo.sh base
       - name: Aplicar consulta
         run: bash demo.sh aplicar
-      - name: Validar contrato
-        run: bash demo.sh testar
+      - name: Validar estado declarado e contrato
+        run: bash scripts/testar-estado.sh
       - name: Encerrar
         if: always()
         run: bash demo.sh encerrar

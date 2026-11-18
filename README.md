@@ -8,7 +8,7 @@ Como verificar se uma consulta atende ao requisito, além de executar sem erros?
 
 O relatório precisa incluir **todos os clientes**, contar apenas pedidos pagos e mostrar zero quando não houver pagamento. O conjunto de dados inclui clientes sem pedidos, pedidos cancelados e um pedido pago de valor zero.
 
-O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versão inicial, preservada em `exemplos/consulta-com-erro.sql`, contém o problema de filtragem. A `main` já inclui a correção do PR nº 1.
+O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versão inicial, preservada em `exemplos/consulta-com-erro.sql`, contém o problema de filtragem. O PR nº 1 registra a correção. O arquivo `sql/estado-demonstracao.txt` identifica o estado atual: `inicial` reproduz o defeito conhecido, e `corrigido` exige aprovação no contrato. Quando o arquivo não existe, vale `corrigido`.
 
 ## Conteúdo
 
@@ -26,6 +26,17 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | IA como tutora | [Perguntas para diagnóstico](docs/prompts-tutora.md) |
 | Ferramenta e momento de uso da IA | [ChatGPT na atividade](docs/uso-da-ia.md) |
 | Registro de decisões | [Modelo](docs/registro-ia-modelo.md) e [exemplo ilustrativo](docs/registro-ia-exemplo.md) |
+
+## Escopo das operações SQL
+
+O briefing do Workshop 4 define PostgreSQL, fluxo de Pull Request, teste de consulta e registro de delegação e validação, com a IA no papel de Tutora. Ele não exige exercícios específicos de `UPDATE` ou `DELETE`. O caso deste repositório aplica esses objetivos à revisão de uma consulta `SELECT`.
+
+- **Consulta e PR:** a alteração está na lógica de leitura do relatório, no arquivo `sql/02_consulta.sql`. Ela muda o resultado calculado, preservando os registros de clientes e pedidos.
+- **Preparação da base:** `sql/01_base.sql` cria e carrega os dados fictícios do exercício. Isso prepara o ambiente e não constitui uma entrega adicional.
+- **UPDATE no teste:** `sql/03_testes.sql` cancela temporariamente os pedidos para verificar o cenário sem pagamentos. O `ROLLBACK` desfaz a alteração e mantém os dados originais.
+- **DELETE:** não há exercício de exclusão de registros. Nenhum PR adicional de alteração ou exclusão de dados é exigido pelo briefing.
+
+A definição técnica do relatório usa uma view para que os testes consultem a mesma implementação. Views não são um tópico próprio solicitado para o workshop. O foco permanece no resultado da consulta, na evidência do teste e na revisão da alteração.
 
 ## Instalação com Docker: PostgreSQL e pgAdmin
 
@@ -91,7 +102,7 @@ bash demo.sh consultar
 bash demo.sh testar
 ```
 
-O comando `inicio` aplica a versão com erro, e o teste deve falhar. A `main` está corrigida: execute `bash demo.sh aplicar` e `bash demo.sh testar` para reaplicar a versão atual e verificar os dois cenários. A [solução de referência](solucao/02_consulta.sql) e o [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) permitem comparar a alteração e suas evidências.
+O comando `inicio` aplica a versão com erro, e o teste deve falhar. Execute `bash demo.sh aplicar` para usar o SQL versionado. No estado `inicial`, `bash demo.sh testar` continua falhando por não atender ao contrato. O workflow verifica separadamente a reprodução autorizada do estado inicial. No estado `corrigido`, exige os dois testes do contrato. A [solução de referência](solucao/02_consulta.sql) e o [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) permitem comparar a alteração e suas evidências.
 
 | Comando | Finalidade |
 |---|---|
@@ -124,7 +135,7 @@ O arquivo gerado inclui commit, alterações locais, definição efetiva da view
 
 ## Aplicação após o merge
 
-O workflow **Testes SQL** valida o PR em um banco temporário. Após o merge com alteração SQL, **Aplicar main no banco de demonstracao** aplica e testa a consulta no PostgreSQL do laboratório, mantendo o banco disponível no pgAdmin. A aplicação só confirma a mudança se os testes passarem. Aprovar o PR, por si só, não aplica o SQL: é necessário fazer o merge. Veja [o fluxo completo e a consulta do commit aplicado](docs/aplicacao-main.md).
+O workflow **Testes SQL** valida o PR em um banco temporário. Após o merge com alteração SQL, **Aplicar main no banco de demonstracao** aplica e testa a consulta no PostgreSQL do laboratório, mantendo o banco disponível no pgAdmin. A aplicação só confirma a mudança se os testes do estado declarado passarem. O retorno ao estado `inicial` é explícito e não significa aprovação da regra de negócio. Aprovar o PR, por si só, não aplica o SQL: é necessário fazer o merge. Veja [o fluxo completo e a consulta do commit aplicado](docs/aplicacao-main.md).
 
 ## Uso da IA
 
