@@ -1,4 +1,4 @@
--- Objetivo: comparar a view aplicada no banco com o contrato independente.
+-- Objetivo: comparar o resultado aplicado no banco com o contrato independente.
 -- Esperado na versão inicial: FAIL e 2 diferenças (Bruno e Carla ausentes).
 -- Esperado após corrigir e reaplicar a implementação: PASS e 0 diferenças.
 -- A palavra FAIL é um resultado de negócio, não um erro de execução deste SELECT.

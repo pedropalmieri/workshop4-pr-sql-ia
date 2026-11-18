@@ -40,8 +40,6 @@ O briefing do Workshop 4 define PostgreSQL, fluxo de Pull Request, teste de cons
 - **UPDATE no teste:** `sql/03_testes.sql` cancela temporariamente os pedidos para verificar o cenário sem pagamentos. O `ROLLBACK` desfaz a alteração e mantém os dados originais.
 - **DELETE:** não há exercício de exclusão de registros. Nenhum PR adicional de alteração ou exclusão de dados é exigido pelo briefing.
 
-A definição técnica do relatório usa uma view para que os testes consultem a mesma implementação. Views não são um tópico próprio solicitado para o workshop. O foco permanece no resultado da consulta, na evidência do teste e na revisão da alteração.
-
 ## Instalação com Docker: PostgreSQL e pgAdmin
 
 Requisitos: Docker Desktop em execução, navegador, Git, editor de texto e Bash. No Windows, use Git Bash ou WSL com integração do Docker. PostgreSQL, pgAdmin e psql executam em contêineres, sem instalação desses aplicativos no computador.
@@ -115,11 +113,11 @@ O comando `inicio` aplica a versão com erro, e o teste deve falhar. Execute `ba
 | `bash demo.sh estrutura` | Listar o schema, objetos e campos do exercício |
 | `bash demo.sh diagnosticar` | Comparar as linhas produzidas pela junção |
 | `bash demo.sh contagem` | Comparar COUNT(*), COUNT(p.id), SUM e COALESCE |
-| `bash demo.sh definicao` | Consultar a definição da view aplicada no banco |
+| `bash demo.sh definicao` | Consultar o SQL aplicado ao relatório |
 | `bash demo.sh inicio` | Aplicar a versão inicial armazenada em exemplos/ |
 | `bash demo.sh referencia` | Aplicar a solução de referência no banco |
 
-Os comandos `inicio` e `referencia` alteram a view no banco, sem modificar o arquivo SQL versionado. O comando `aplicar` usa o conteúdo atual de `sql/02_consulta.sql`. Executar uma alteração no Query Tool não salva automaticamente esse arquivo no Git. Mantenha a correção também no arquivo para incluí-la no PR.
+Os comandos `inicio` e `referencia` aplicam versões do relatório no banco, sem modificar o arquivo SQL versionado. O comando `aplicar` usa o conteúdo atual de `sql/02_consulta.sql`. Executar uma alteração no Query Tool não salva automaticamente esse arquivo no Git. Mantenha a correção também no arquivo para incluí-la no PR.
 
 ## Validação do ambiente
 
@@ -135,7 +133,7 @@ Para registrar uma execução própria:
 bash scripts/registrar-evidencia.sh
 ```
 
-O arquivo gerado inclui commit, alterações locais, definição efetiva da view e resultados. Uma falha no teste continua sendo uma falha no comando.
+O arquivo gerado inclui commit, alterações locais, SQL efetivamente aplicado e resultados. Uma falha no teste continua sendo uma falha no comando.
 
 ## Aplicação após o merge
 

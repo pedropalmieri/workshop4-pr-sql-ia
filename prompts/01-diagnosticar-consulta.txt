@@ -4,4 +4,4 @@ Relacione LEFT JOIN, WHERE e NULL. Faça duas perguntas para orientar minha inve
 Não entregue a consulta corrigida. Se faltar informação, pergunte antes de concluir.
 
 SQL em análise:
-[COLE O SELECT DE exemplos/consulta-com-erro.sql]
+[COLE O CONTEÚDO DE exemplos/consulta-inicial.sql]

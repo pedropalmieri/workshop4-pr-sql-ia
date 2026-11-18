@@ -24,6 +24,6 @@ Ao abrir outra conversa ou mudar de ferramenta, envie novamente o contexto 00. O
 | [08 · Registro](08-organizar-registro-real.txt) | Organizar a interação ocorrida | Conversa, decisão e validação reais |
 | [09 · Retomar tutoria](09-redirecionar-para-tutoria.txt) | Redirecionar uma resposta fora do papel | Use na conversa em andamento |
 
-Para o diagnóstico, copie apenas o SELECT de [consulta-com-erro.sql](../exemplos/consulta-com-erro.sql), sem o comando CREATE OR REPLACE VIEW. O objetivo é discutir a consulta, sem introduzir um tópico de views.
+Para o diagnóstico, envie a [consulta inicial](../exemplos/consulta-inicial.sql) junto com o prompt 01. O arquivo contém a consulta e comentários sobre o resultado observado.
 
 As respostas devem explicar e orientar a investigação, sem entregar a implementação pronta. Não envie credenciais nem invente sugestões ou resultados para preencher o registro. As [consultas comentadas](../exemplos/respostas-questoes-slides.sql) ajudam a conferir as respostas no pgAdmin, e o [modelo de registro](../docs/registro-ia-modelo.md) preserva a decisão humana.

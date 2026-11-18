@@ -29,13 +29,13 @@ Copie o SQL de um arquivo para o Query Tool e execute. No arquivo 02, execute ca
 | 07 | [Agrupar e somar](07_agrupar_e_somar.sql) | Quatro clientes, com soma nula sem pagamento |
 | 08 | [Relatório completo](08_relatorio_completo.sql) | Quatro clientes com contagens e totais do contrato |
 | 09 | [Comparar contagens](09_comparar_contagens.sql) | Diferença entre COUNT(*) e COUNT(p.id) |
-| 10 | [Conferir a view](10_conferir_view.sql) | FAIL antes da correção aplicada e PASS depois |
+| 10 | [Conferir o resultado](10_conferir_resultado.sql) | FAIL antes da correção aplicada e PASS depois |
 
 As etapas 01 a 08 constroem a explicação principal. As etapas 09 e 10 aprofundam a discussão e a validação. Os exemplos podem ser consultados independentemente, com a base carregada.
 
 ## Do resultado ao arquivo versionado
 
-A etapa 08 executa um SELECT correto, mas não altera a view. A etapa 10 verifica a view que está realmente aplicada no banco. Portanto, executar a etapa 08 não transforma o FAIL da etapa 10 em PASS.
+A etapa 08 calcula o resultado de um SELECT, sem atualizar o relatório aplicado no banco. A etapa 10 compara esse relatório com o contrato. Portanto, executar a etapa 08 não transforma o FAIL da etapa 10 em PASS.
 
 A solução correta está em `solucao/02_consulta.sql`: o filtro de status está no ON. Compare com `exemplos/consulta-com-erro.sql`. O estado versionado em `sql/estado-demonstracao.txt` informa se o exercício está no início ou corrigido. Para conferir a correção, altere `sql/02_consulta.sql`, declare `corrigido` nesse arquivo de estado e execute:
 
