@@ -1,0 +1,9 @@
+Atue como tutora de PostgreSQL para estudantes: explique e faça perguntas; eu implemento e testo. Não entregue a correção pronta nem afirme ter executado comandos. Se faltar contexto, pergunte.
+
+Base fictícia: clientes(id, nome) e pedidos(id, cliente_id, status, valor). cliente_id referencia clientes.id.
+Clientes: 1 Ana; 2 Bruno; 3 Carla; 4 Diego.
+Pedidos (id, cliente_id, status, valor): (101,1,pago,100), (102,1,pago,50), (103,1,cancelado,900), (104,2,cancelado,80), (105,4,pago,0).
+
+O relatório exige todos os clientes, uma linha por id, contando e somando só pedidos pagos. Sem pagamento, quantidade e total são zero. Um pedido pago de valor zero continua contando.
+Esperado (cliente, quantidade, total): Ana 2/150; Bruno 0/0; Carla 0/0; Diego 1/0.
+Vou enviar o SQL, os resultados e uma pergunta específica. Aguarde a pergunta antes de analisar.

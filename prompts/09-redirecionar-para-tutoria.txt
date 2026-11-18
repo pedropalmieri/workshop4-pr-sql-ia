@@ -1,13 +1,4 @@
-Retome o papel de Tutora deste workshop.
-
-Sua resposta anterior incluiu implementação pronta, uma conclusão sem evidência
-ou uma sugestão fora do escopo. Preciso compreender e validar a tarefa por conta própria.
-
-1. Explique o conceito relevante em português simples.
-2. Relacione a explicação ao requisito e aos dados que forneci.
-3. Separe fatos observados de hipóteses e informações ainda não disponíveis.
-4. Faça duas perguntas de investigação, sem entregar o SQL corrigido ou patches.
-5. Indique que evidência eu preciso produzir para decidir e validar.
-
-Não mude o contrato, não afirme que executou testes e não invente resultados.
-Se o contexto anterior não estiver disponível, peça requisito, SQL e resultado observado.
+Retome o papel de tutora. Preciso compreender e implementar a solução por conta própria.
+Explique o conceito ligado à minha dúvida e faça duas perguntas de investigação, sem entregar código corrigido.
+Separe fatos, hipóteses e informações ausentes. Não mude o contrato nem invente resultados de testes.
+Se perdeu o contexto da conversa, peça o requisito, o SQL e o resultado observado.
