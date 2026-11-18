@@ -2,9 +2,11 @@
 
 O relatório de pedidos pagos pode ser construído por etapas. Cada consulta acrescenta um conceito e permite conferir o resultado antes de avançar.
 
-Os blocos completos estão em [consultas-passo-a-passo.sql](../exemplos/consultas-passo-a-passo.sql). Para executá-los individualmente, use `bash demo.sh terminal`. Para executar todos, use `bash demo.sh passos`.
+Na interface gráfica, use os blocos de [consultas-pgadmin.sql](../exemplos/consultas-pgadmin.sql), executando um SELECT por vez no Query Tool do pgAdmin. A instalação e a conexão estão em [pgAdmin](pgadmin.md).
 
-Antes da exploração, execute `subir`, `conexao` e `base`, conforme o README. A execução das consultas faz parte da atividade. pgAdmin não é um pré-requisito. Os comandos iniciados por barra invertida no arquivo são instruções do psql, enquanto os SELECTs são SQL.
+A versão [consultas-passo-a-passo.sql](../exemplos/consultas-passo-a-passo.sql) acrescenta metacomandos exclusivos do psql. Ela funciona com `bash demo.sh passos` ou no terminal SQL. Não cole esses metacomandos no Query Tool.
+
+Antes da exploração, inicie a interface, carregue a base e aplique a consulta inicial conforme o README. A execução das consultas faz parte da atividade.
 
 ## 1. Seleção de colunas
 
@@ -49,7 +51,7 @@ Trocar INNER JOIN por LEFT JOIN preserva os clientes à esquerda mesmo quando ne
 
 **Resultado:** cinco linhas. Ana aparece duas vezes. Bruno, Carla e Diego aparecem uma vez cada. As colunas de pedido de Bruno e Carla ficam nulas.
 
-No psql, `\pset null '(NULL)'` destaca essas ausências. NULL indica ausência de valor. O zero de Diego é um valor informado em um pedido existente.
+No psql, `\pset null '(NULL)'` destaca essas ausências. No pgAdmin, observe os valores nulos da grade de resultados. NULL indica ausência de valor. O zero de Diego é um valor informado em um pedido existente.
 
 ## 5. Agrupamento e agregações
 

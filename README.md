@@ -15,6 +15,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A implem
 | Tema | Material |
 |---|---|
 | Apresentação | [Slides](materiais/Workshop4-19nov2026.pptx) |
+| Interface gráfica e instalação Docker | [pgAdmin](docs/pgadmin.md) |
 | Ambiente e acesso ao banco | [Conexão PostgreSQL](docs/conexao-postgresql.md) |
 | SELECT, filtros, JOIN e agregações | [Consultas passo a passo](docs/consultas-passo-a-passo.md) |
 | Análise do problema e da solução | [SQL comentado](docs/sql-comentado.md) |
@@ -24,39 +25,57 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A implem
 | Ferramenta e momento de uso da IA | [ChatGPT na atividade](docs/uso-da-ia.md) |
 | Registro de decisões | [Modelo](docs/registro-ia-modelo.md) e [exemplo ilustrativo](docs/registro-ia-exemplo.md) |
 
-## Ambiente
+## Instalação com Docker: PostgreSQL e pgAdmin
 
-Requisitos: Docker Desktop em execução, Git, editor de texto e Bash. No Windows, use Git Bash ou WSL com integração do Docker. PostgreSQL e o cliente psql executam no contêiner, sem instalação local adicional.
+Requisitos: Docker Desktop em execução, navegador, Git, editor de texto e Bash. No Windows, use Git Bash ou WSL com integração do Docker. PostgreSQL, pgAdmin e psql executam em contêineres, sem instalação desses aplicativos no computador.
+
+Na raiz do clone, estes são os comandos Docker usados para baixar e iniciar os dois serviços:
 
 ```bash
 git clone https://github.com/pedropalmieri/workshop4-pr-sql-ia.git
 cd workshop4-pr-sql-ia
-bash demo.sh subir
-bash demo.sh conexao
+docker compose -p ws4-workshop --profile interface pull db pgadmin
+docker compose -p ws4-workshop --profile interface up -d --wait
 bash demo.sh base
+bash demo.sh aplicar
 ```
 
-A conexão usa TCP e autenticação por senha no ambiente Docker. Os dados são fictícios e descartáveis. Nenhuma porta está publicada no computador. O repositório é privado e o clone exige acesso à conta.
+Imagens: **postgres:17.12-alpine** e **dpage/pgadmin4:9.19**. O atalho `bash demo.sh interface` executa a inicialização via Compose. A opção `--wait` aguarda os serviços ficarem disponíveis. Um PostgreSQL já iniciado no projeto ws4-workshop é reutilizado.
 
-**pgAdmin não é necessário neste ambiente.** A prática usa o psql para executar consultas reais. Banco: `workshop`. Schema: `ws4`. Objetos: `clientes`, `pedidos` e a view `resumo_clientes`. Consulte as diferenças entre servidor, banco, schema e cliente em [conexão PostgreSQL](docs/conexao-postgresql.md).
+Para conferir instalação e conexão:
 
-## Exploração das consultas
+```bash
+docker compose -p ws4-workshop --profile interface ps
+bash demo.sh conexao
+bash scripts/validar-interface.sh
+```
 
-Para abrir o terminal SQL:
+## Consultas pela interface gráfica
+
+Abra **http://localhost:5050**.
+
+| Login do pgAdmin | Valor didático |
+|---|---|
+| E-mail | workshop@example.com |
+| Senha | pgadmin_local |
+
+O servidor **Workshop 4 - PostgreSQL** já vem cadastrado com a conexão ao banco. Expanda **Workshop 4 > Workshop 4 - PostgreSQL > Bancos de dados > workshop** e abra **Ferramentas > Ferramenta de consulta** (Query Tool).
+
+Use os blocos de [consultas-pgadmin.sql](exemplos/consultas-pgadmin.sql), um SELECT por vez. O resultado aparece em Data Output. O guia [pgAdmin](docs/pgadmin.md) detalha a navegação, credenciais e solução de problemas.
+
+O PostgreSQL é acessado pelo pgAdmin em **db:5432**, banco **workshop**, schema **ws4**. Somente a interface é publicada no computador em 127.0.0.1:5050. Os dados são fictícios e descartáveis. O repositório é privado e o clone exige acesso.
+
+## Terminal e testes
+
+A interface gráfica é o caminho principal para explorar SQL. O psql continua disponível para testes e automação:
 
 ```bash
 bash demo.sh terminal
-```
-
-Execute os blocos de [consultas-passo-a-passo.sql](exemplos/consultas-passo-a-passo.sql) individualmente. Para executar a sequência completa:
-
-```bash
+# Ou, para executar a sequência psql completa:
 bash demo.sh passos
 ```
 
-A sequência apresenta seleção de colunas, filtro, INNER JOIN, LEFT JOIN, agrupamento, contagem, soma e tratamento de valores nulos.
-
-O arquivo de exemplos contém também comandos do psql iniciados por barra invertida. Esses comandos não são SQL e não devem ser colados em editores gráficos de consulta. Os blocos SELECT são SQL PostgreSQL.
+O arquivo `exemplos/consultas-passo-a-passo.sql` contém metacomandos psql, como comandos de barra invertida. Para o pgAdmin, utilize a versão SQL pura `exemplos/consultas-pgadmin.sql`.
 
 ## Consulta inicial e testes
 
@@ -70,6 +89,7 @@ Na `main`, o teste deve falhar: a consulta inicial omite clientes exigidos pelo 
 
 | Comando | Finalidade |
 |---|---|
+| `bash demo.sh interface` | Iniciar PostgreSQL e pgAdmin para uso no navegador |
 | `bash demo.sh conexao` | Mostrar conexão, banco, usuário, porta e versão |
 | `bash demo.sh estrutura` | Listar o schema, objetos e campos do exercício |
 | `bash demo.sh diagnosticar` | Comparar as linhas produzidas pela junção |
@@ -78,7 +98,7 @@ Na `main`, o teste deve falhar: a consulta inicial omite clientes exigidos pelo 
 | `bash demo.sh inicio` | Aplicar a versão inicial armazenada em exemplos/ |
 | `bash demo.sh referencia` | Aplicar a solução de referência no banco |
 
-Os comandos `inicio` e `referencia` alteram a view no banco, sem modificar o arquivo SQL versionado. O comando `aplicar` usa o conteúdo atual de `sql/02_consulta.sql`.
+Os comandos `inicio` e `referencia` alteram a view no banco, sem modificar o arquivo SQL versionado. O comando `aplicar` usa o conteúdo atual de `sql/02_consulta.sql`. Executar uma alteração no Query Tool não salva automaticamente esse arquivo no Git. Mantenha a correção também no arquivo para incluí-la no PR.
 
 ## Validação do ambiente
 
@@ -86,7 +106,7 @@ Os comandos `inicio` e `referencia` alteram a view no banco, sem modificar o arq
 bash scripts/validar-ambiente.sh
 ```
 
-A validação usa um banco separado. Confere conexão, rejeição de senha incorreta, consultas e testes. O ambiente separado é removido ao terminar. As [saídas da validação](docs/validacao/conexao-e-consultas-20261118.txt) incluem as falhas negativas esperadas e a aprovação final.
+A validação de SQL usa um banco separado, sem iniciar outro pgAdmin. Confere conexão, rejeição de senha incorreta, consultas e testes. O ambiente separado é removido ao terminar. As [saídas da validação](docs/validacao/conexao-e-consultas-20261118.txt) incluem as falhas negativas esperadas e a aprovação final.
 
 Para registrar uma execução própria:
 
@@ -109,8 +129,11 @@ A discussão não exige entrega própria. O conteúdo apoia as evidências de SQ
 Para encerrar o banco local:
 
 ```bash
-bash demo.sh encerrar
+docker compose -p ws4-workshop --profile interface down
+# Equivalente: bash demo.sh encerrar
 ```
+
+O volume de configuração do pgAdmin permanece. Como o banco é descartável, recarregue base e aplicar na próxima inicialização.
 
 ## Referências
 

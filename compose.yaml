@@ -14,3 +14,28 @@ services:
     # Banco descartável e sem porta exposta. Os comandos usam docker compose exec.
     tmpfs:
       - /var/lib/postgresql/data
+  pgadmin:
+    image: dpage/pgadmin4:9.19
+    profiles: [interface]
+    environment:
+      PGADMIN_DEFAULT_EMAIL: workshop@example.com
+      PGADMIN_DEFAULT_PASSWORD: pgadmin_local
+      PGADMIN_DISABLE_POSTFIX: "1"
+      PGPASS_FILE: /pgadmin4/workshop.pgpass
+    ports:
+      - "127.0.0.1:${PGADMIN_PORT:-5050}:80"
+    depends_on:
+      db:
+        condition: service_healthy
+    volumes:
+      - pgadmin-data:/var/lib/pgadmin
+      - ./pgadmin/servers.json:/pgadmin4/servers.json:ro
+      - ./pgadmin/workshop.pgpass:/pgadmin4/workshop.pgpass:ro
+    healthcheck:
+      test: ["CMD", "/venv/bin/python3", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1/misc/ping', timeout=5)"]
+      interval: 5s
+      timeout: 6s
+      retries: 30
+      start_period: 20s
+volumes:
+  pgadmin-data:
