@@ -1,6 +1,6 @@
 # SQL comentado: os clientes que desapareceram
 
-Material para consultar antes ou depois do encontro. Na aula, basta trabalhar o filtro do JOIN e uma das armadilhas abaixo. Dados e regras são fictícios.
+Análise da regra de negócio, da junção e das agregações do relatório. Dados e regras são fictícios.
 
 ## Regra de negócio antes do código
 

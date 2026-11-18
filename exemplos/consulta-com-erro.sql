@@ -1,4 +1,4 @@
--- Ponto de partida congelado para repetir a demonstração em qualquer branch.
+-- Versão inicial para comparação com a solução de referência.
 -- Este arquivo contém um erro de negócio intencional.
 CREATE OR REPLACE VIEW ws4.resumo_clientes AS
 SELECT c.id, c.nome,

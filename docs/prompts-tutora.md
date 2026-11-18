@@ -1,6 +1,6 @@
 # Prompts para IA como tutora
 
-Use um chat em modo de conversa. Evite agentes que editam arquivos e geração automática de solução neste exercício. O instrutor explica que esta restrição vem do degrau Tutora do briefing da Sprint 1.
+Use um chat em modo de conversa. Evite agentes que editam arquivos e geração automática de solução neste exercício. O papel de Tutora corresponde ao degrau vigente da Sprint 1.
 
 ## Diagnóstico
 

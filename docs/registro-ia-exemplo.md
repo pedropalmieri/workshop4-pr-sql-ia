@@ -1,4 +1,4 @@
-# Simulação didática de decisões
+# Exemplo ilustrativo de registro de decisões
 
 Este exemplo é fictício. Não documenta uma conversa real com IA.
 

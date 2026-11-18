@@ -1,41 +1,31 @@
-# Workshop 4 · Pull Request, testes SQL e decisões com IA
+# Workshop 4 · PostgreSQL, testes e Pull Request
 
-**19/11/2026 · 55 minutos de conteúdo e 5 de margem.** PostgreSQL, Git/GitHub e terminal, com IA no papel de **Tutora**.
+**19 de novembro de 2026 · AI-Driven Data Engineering**
 
-Caso didático: um relatório de pedidos pagos precisa mostrar todos os clientes. A consulta executa sem erro de sintaxe, mas omite duas pessoas. Vamos identificar a causa, escrever a correção, validar o resultado e discutir um PR com evidências.
+Como verificar se uma consulta atende ao requisito, além de executar sem erros? Neste workshop, usamos um relatório de clientes e pedidos para investigar o resultado, testar uma correção e revisar a alteração em um Pull Request.
 
-O encontro **não tem entregável próprio**. A atividade prepara as evidências da Sprint 1 do Desafio Final. O enunciado oficial do desafio prevalece sobre este exemplo. O caso, os dados e as atividades deste repositório são propostas didáticas.
+## Caso: relatório de pedidos pagos
 
-## Material para cada momento
+O relatório precisa incluir **todos os clientes**, contar apenas pedidos pagos e mostrar zero quando não houver pagamento. O conjunto de dados inclui clientes sem pedidos, pedidos cancelados e um pedido pago de valor zero.
 
-| Para usar | Arquivo |
+O [contrato da consulta](docs/contrato.md) define o resultado esperado. A implementação inicial contém um problema de filtragem que será analisado ao longo da atividade.
+
+## Conteúdo
+
+| Tema | Material |
 |---|---|
-| Apresentação editável com notas de fala | [PowerPoint, 13 slides](materiais/Workshop4-19nov2026-v1.pptx) |
-| Cronograma de 55 minutos | [Roteiro do instrutor](materiais/roteiro-do-instrutor.md) |
-| Preparação, comandos e recuperação | [Guia de condução](materiais/guia-de-conducao.md) |
-| Conexão TCP, autenticação e terminal SQL | [Conexão PostgreSQL](docs/conexao-postgresql.md) |
-| Explicação de cada etapa da consulta | [Sequência de SQL para a aula](materiais/explicacao-das-consultas.md) |
-| Participação da turma, sem entrega obrigatória | [Atividade de 5 minutos](docs/atividade-da-turma.md) |
-| Explicação do erro e da correção | [SQL comentado](docs/sql-comentado.md) |
-| Perguntas e respostas esperadas | [Gabarito do instrutor](materiais/perguntas-e-gabarito.md) |
-| Branch, commit, revisão e PR | [Laboratório Git e Pull Request](docs/laboratorio-pr.md) |
-| Relação com a trilha e o briefing | [Alinhamento do workshop](docs/alinhamento-do-workshop.md) |
-| Diagnóstico conceitual com IA | [Prompts para tutora](docs/prompts-tutora.md) |
-| Registro das próprias interações | [Modelo de registro](docs/registro-ia-modelo.md) |
-| Exemplo fictício, identificado como simulação | [Registro de exemplo](docs/registro-ia-exemplo.md) |
+| Apresentação | [Slides](materiais/Workshop4-19nov2026.pptx) |
+| Ambiente e acesso ao banco | [Conexão PostgreSQL](docs/conexao-postgresql.md) |
+| SELECT, filtros, JOIN e agregações | [Consultas passo a passo](docs/consultas-passo-a-passo.md) |
+| Análise do problema e da solução | [SQL comentado](docs/sql-comentado.md) |
+| Validação e revisão | [Laboratório de Pull Request](docs/laboratorio-pr.md) |
+| Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
+| IA como tutora | [Perguntas para diagnóstico](docs/prompts-tutora.md) |
+| Registro de decisões | [Modelo](docs/registro-ia-modelo.md) e [exemplo ilustrativo](docs/registro-ia-exemplo.md) |
 
-## Estado do repositório
+## Ambiente
 
-- `main`: consulta com erro intencional. O teste deve falhar após aplicar essa consulta.
-- [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1): correção de referência na branch `fix/clientes-sem-pagamento`, mantida aberta para discussão. A execução inicial do check passou em 17/11/2026.
-- `solucao/02_consulta.sql`: gabarito previamente preparado pelo instrutor.
-- `exemplos/`: consultas de apoio. Não substituem o código em `sql/02_consulta.sql`.
-
-O repositório é privado. Alunos precisam de acesso para clonar, consultar o PR ou abrir alterações. Sem esse acesso, o instrutor pode demonstrar pela própria tela ou compartilhar uma cópia autorizada do kit. Não há necessidade de acesso individual para a discussão em aula.
-
-## Primeiro uso
-
-Requisitos locais: **Docker Desktop em execução, Git, editor e Bash**. Windows: Git Bash ou WSL com integração do Docker. Não é necessário instalar PostgreSQL, psql ou Python no computador.
+Requisitos: Docker Desktop em execução, Git, editor de texto e Bash. No Windows, use Git Bash ou WSL com integração do Docker. PostgreSQL e o cliente psql executam no contêiner, sem instalação local adicional.
 
 ```bash
 git clone https://github.com/pedropalmieri/workshop4-pr-sql-ia.git
@@ -43,73 +33,79 @@ cd workshop4-pr-sql-ia
 bash demo.sh subir
 bash demo.sh conexao
 bash demo.sh base
+```
+
+A conexão usa TCP e autenticação por senha no ambiente Docker. Os dados são fictícios e descartáveis. Nenhuma porta está publicada no computador. O repositório é privado e o clone exige acesso à conta.
+
+## Exploração das consultas
+
+Para abrir o terminal SQL:
+
+```bash
+bash demo.sh terminal
+```
+
+Execute os blocos de [consultas-passo-a-passo.sql](exemplos/consultas-passo-a-passo.sql) individualmente. Para executar a sequência completa:
+
+```bash
+bash demo.sh passos
+```
+
+A sequência apresenta seleção de colunas, filtro, INNER JOIN, LEFT JOIN, agrupamento, contagem, soma e tratamento de valores nulos.
+
+## Consulta inicial e testes
+
+```bash
 bash demo.sh aplicar
 bash demo.sh consultar
 bash demo.sh testar
 ```
 
-Na `main`, aparecem **Ana e Diego**, e o teste retorna `FAIL` com código 3. É o erro que a aula vai investigar. Leia o [contrato calculado manualmente](docs/contrato.md) antes de consultar o gabarito.
+Na `main`, o teste deve falhar: a consulta inicial omite clientes exigidos pelo contrato. Depois da correção, os dois cenários de teste devem passar. A [solução de referência](solucao/02_consulta.sql) e o [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) permitem comparar a alteração e suas evidências.
 
-O banco usa `postgres:17.12-alpine`, sem porta publicada. Os dados são fictícios e descartáveis. A primeira execução precisa de internet para baixar a imagem. Se o contêiner parar, recarregue a base e reaplique a consulta.
-
-## Comandos da apresentação
-
-Todos os comandos partem da raiz do repositório.
-
-| Comando | O que faz |
+| Comando | Finalidade |
 |---|---|
-| `bash demo.sh subir` | Inicia o PostgreSQL e aguarda disponibilidade |
-| `bash demo.sh conexao` | Valida conexão TCP e mostra banco, usuário, porta e versão |
-| `bash demo.sh terminal` | Abre o psql interativo para executar SQL por etapas |
-| `bash demo.sh base` | Recarrega os quatro clientes e cinco pedidos |
-| `bash demo.sh aplicar` | Aplica a consulta do arquivo que você está editando |
-| `bash demo.sh consultar` | Mostra o relatório ordenado por cliente |
-| `bash demo.sh definicao` | Mostra o SQL da view realmente aplicada no banco |
-| `bash demo.sh testar` | Valida o contrato e um segundo cenário |
-| `bash demo.sh diagnosticar` | Mostra as linhas antes do filtro e com status no ON |
-| `bash demo.sh contagem` | Compara COUNT(*) e COUNT(p.id), soma e COALESCE |
-| `bash demo.sh passos` | Executa seis consultas progressivas de leitura e agregação |
-| `bash demo.sh inicio` | Aplica o erro congelado de exemplos/, sem editar arquivos |
-| `bash demo.sh referencia` | Aplica o gabarito de solucao/, sem editar arquivos |
-| `bash demo.sh encerrar` | Remove somente os recursos Docker do projeto da aula |
+| `bash demo.sh conexao` | Mostrar conexão, banco, usuário, porta e versão |
+| `bash demo.sh diagnosticar` | Comparar as linhas produzidas pela junção |
+| `bash demo.sh contagem` | Comparar COUNT(*), COUNT(p.id), SUM e COALESCE |
+| `bash demo.sh definicao` | Consultar a definição da view aplicada no banco |
+| `bash demo.sh inicio` | Aplicar a versão inicial armazenada em exemplos/ |
+| `bash demo.sh referencia` | Aplicar a solução de referência no banco |
 
-`inicio` e `referencia` servem para ensaio e recuperação. Na demonstração principal, o humano edita `sql/02_consulta.sql` e usa **aplicar**. Aplicar o gabarito no banco não altera o arquivo a ser enviado no commit.
+Os comandos `inicio` e `referencia` alteram a view no banco, sem modificar o arquivo SQL versionado. O comando `aplicar` usa o conteúdo atual de `sql/02_consulta.sql`.
 
-## Ensaio antes do encontro
+## Validação do ambiente
 
 ```bash
-bash scripts/ensaio.sh
+bash scripts/validar-ambiente.sh
 ```
 
-O ensaio usa outro projeto Docker, `ws4-ensaio`. Valida conexão TCP com senha correta, exige recusa de senha incorreta, executa as seis consultas progressivas, verifica o erro conhecido e exige aprovação da referência nos testes. Ao terminar, remove esse ambiente separado. Não altera os arquivos nem o banco `ws4-workshop` da aula.
+A validação usa um banco separado. Confere conexão, rejeição de senha incorreta, consultas e testes. O ambiente separado é removido ao terminar. As [saídas da validação](docs/validacao/conexao-e-consultas-20261117.txt) incluem as falhas negativas esperadas e a aprovação final.
 
-As saídas reais da validação de 17/11 estão em [conexão e consultas](docs/validacao/conexao-e-consultas-20261117.txt). O FATAL de senha incorreta e o FAIL da consulta inicial são verificações negativas esperadas. A conexão da aula usa o cliente dentro do Docker. Não há porta publicada para um cliente gráfico no computador.
-
-## Evidência da sua execução
-
-Depois de aplicar a consulta que pretende revisar:
+Para registrar uma execução própria:
 
 ```bash
 bash scripts/registrar-evidencia.sh
 ```
 
-O comando cria um arquivo com data, commit, arquivos SQL modificados, definição efetiva da view no banco e saída da consulta e dos testes. Não sobrescreve evidências existentes. Se o teste falhar, o comando também retorna falha. O commit informa a base Git, e o status mostra alterações locais ainda não incluídas nele. A definição registrada permite conferir o que estava aplicado, inclusive quando você usou o gabarito de recuperação.
+O arquivo gerado inclui commit, alterações locais, definição efetiva da view e resultados. Uma falha no teste continua sendo uma falha no comando.
 
-Copie `docs/registro-ia-modelo.md` para `docs/registro-ia.md` e registre as interações reais. A IA explica conceitos e faz perguntas. Você implementa, executa e decide, justificando ao menos uma sugestão aceita e uma rejeitada. Nunca apresente o exemplo fictício como conversa real.
+## Uso da IA
 
-## Encerramento e problemas comuns
+Neste encontro, a IA atua como **Tutora**: explica conceitos e ajuda a investigar o problema. A implementação, a execução e a validação ficam com a pessoa que está desenvolvendo.
+
+Registre tarefa delegada, motivo, orientação recebida, decisão, evidência e retrabalho. Use o modelo para suas interações reais. O exemplo disponível é fictício e está identificado como ilustração.
+
+## Participação e continuidade
+
+A discussão não exige entrega própria. O conteúdo apoia as evidências de SQL, testes e revisão da Sprint 1. Para os requisitos de entrega, siga o enunciado oficial do Desafio Final.
+
+Para encerrar o banco local:
 
 ```bash
 bash demo.sh encerrar
 ```
 
-- Docker não conecta: abra o Docker Desktop e confira `docker info`.
-- Banco reiniciou: execute `base` e `aplicar` novamente.
-- Não aparecem os quatro clientes: confira o filtro no `ON` e compare com o contrato.
-- A view continua corrigida mesmo na `main`: trocar de branch muda arquivos, não o banco. Execute `aplicar`.
-- Script não executa no PowerShell: use Git Bash ou WSL. Os comandos deste kit são Bash.
-- IA ou internet indisponível: use a análise dos dados e o [plano de recuperação](materiais/guia-de-conducao.md). Identifique exemplos simulados.
+## Referências
 
-## Referências técnicas
-
-[JOIN no PostgreSQL](https://www.postgresql.org/docs/current/tutorial-join.html), [agregações](https://www.postgresql.org/docs/current/functions-aggregate.html) e [Pull Requests no GitHub](https://docs.github.com/en/pull-requests/reference/pull-requests). Os requisitos pedagógicos vêm do briefing do Workshop 4 fornecido pelo instrutor, sem inclusão do documento original neste repositório.
+[JOIN no PostgreSQL](https://www.postgresql.org/docs/current/tutorial-join.html), [agregações](https://www.postgresql.org/docs/current/functions-aggregate.html) e [Pull Requests no GitHub](https://docs.github.com/en/pull-requests/reference/pull-requests).
