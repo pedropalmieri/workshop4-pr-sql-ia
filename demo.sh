@@ -9,8 +9,9 @@ psql_ws() {
 case "${1:-ajuda}" in
   subir) docker compose -p "$project" up -d --wait ;;
   base) psql_ws < sql/01_base.sql ;;
+  estrutura) psql_ws < exemplos/explorar-estrutura.sql ;;
   conexao) psql_ws -c '\conninfo' -c 'SELECT current_database() AS banco, current_user AS usuario, inet_server_addr() AS endereco, inet_server_port() AS porta;' -c 'SHOW server_version;' ;;
-  terminal) docker compose -p "$project" exec db sh -c 'export PGPASSWORD="$POSTGRES_PASSWORD"; exec psql -X -v ON_ERROR_STOP=1 -h 127.0.0.1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"' ;;
+  terminal) docker compose -p "$project" exec db sh -c 'export PGPASSWORD="$POSTGRES_PASSWORD"; exec psql -X -P pager=off -P "null=(NULL)" -v ON_ERROR_STOP=1 -h 127.0.0.1 -U "$POSTGRES_USER" -d "$POSTGRES_DB"' ;;
   aplicar) psql_ws < sql/02_consulta.sql ;;
   inicio) psql_ws < exemplos/consulta-com-erro.sql ;;
   referencia) psql_ws < solucao/02_consulta.sql ;;
@@ -21,6 +22,6 @@ case "${1:-ajuda}" in
   contagem) psql_ws < exemplos/armadilha-count.sql ;;
   passos) psql_ws < exemplos/consultas-passo-a-passo.sql ;;
   encerrar) docker compose -p "$project" down ;;
-  ajuda) echo 'Uso: bash demo.sh {subir|conexao|terminal|base|aplicar|inicio|referencia|consultar|definicao|testar|diagnosticar|contagem|passos|encerrar}' ;;
+  ajuda) echo 'Uso: bash demo.sh {subir|conexao|estrutura|terminal|base|aplicar|inicio|referencia|consultar|definicao|testar|diagnosticar|contagem|passos|encerrar}' ;;
   *) echo 'Comando desconhecido. Use: bash demo.sh ajuda' >&2; exit 2 ;;
 esac

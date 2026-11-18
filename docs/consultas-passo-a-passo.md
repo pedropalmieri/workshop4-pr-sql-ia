@@ -4,6 +4,8 @@ O relatório de pedidos pagos pode ser construído por etapas. Cada consulta acr
 
 Os blocos completos estão em [consultas-passo-a-passo.sql](../exemplos/consultas-passo-a-passo.sql). Para executá-los individualmente, use `bash demo.sh terminal`. Para executar todos, use `bash demo.sh passos`.
 
+Antes da exploração, execute `subir`, `conexao` e `base`, conforme o README. A execução das consultas faz parte da atividade. pgAdmin não é um pré-requisito. Os comandos iniciados por barra invertida no arquivo são instruções do psql, enquanto os SELECTs são SQL.
+
 ## 1. Seleção de colunas
 
 ```sql

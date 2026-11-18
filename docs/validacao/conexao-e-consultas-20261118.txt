@@ -1,0 +1,194 @@
+VALIDAÇÃO DO AMBIENTE E DAS CONSULTAS · 18/11/2026
+Comando: bash scripts/validar-ambiente.sh
+Resultado final: código 0. Banco separado ws4-validacao, removido ao terminar.
+A senha incorreta e a consulta inicial geram falhas negativas esperadas.
+
+ Network ws4-validacao_default Creating
+ Network ws4-validacao_default Creating
+ Network ws4-validacao_default Created
+ Network ws4-validacao_default Created
+ Container ws4-validacao-db-1 Creating
+ Container ws4-validacao-db-1 Created
+ Container ws4-validacao-db-1 Starting
+ Container ws4-validacao-db-1 Started
+ Container ws4-validacao-db-1 Waiting
+ Container ws4-validacao-db-1 Healthy
+You are connected to database "workshop" as user "workshop" on host "127.0.0.1" at port "5432".
+  banco   | usuario  | endereco  | porta
+----------+----------+-----------+-------
+ workshop | workshop | 127.0.0.1 |  5432
+(1 row)
+
+ server_version
+----------------
+ 17.12
+(1 row)
+
+Autenticação: uma senha incorreta deve ser recusada.
+psql: error: connection to server at "127.0.0.1", port 5432 failed: FATAL:  password authentication failed for user "workshop"
+BEGIN
+CREATE SCHEMA
+CREATE TABLE
+CREATE TABLE
+TRUNCATE TABLE
+INSERT 0 4
+INSERT 0 5
+COMMIT
+Conexão atual
+  banco   | usuario
+----------+----------
+ workshop | workshop
+(1 row)
+
+Schema do exercício
+ schema_name
+-------------
+ ws4
+(1 row)
+
+Tabelas e views em ws4
+ schema |  objeto  |    tipo
+--------+----------+------------
+ ws4    | clientes | BASE TABLE
+ ws4    | pedidos  | BASE TABLE
+(2 rows)
+
+Chaves e campos das tabelas
+  tabela  |   coluna   |  tipo   | aceita_nulo
+----------+------------+---------+-------------
+ clientes | id         | integer | NO
+ clientes | nome       | text    | NO
+ pedidos  | id         | integer | NO
+ pedidos  | cliente_id | integer | NO
+ pedidos  | status     | text    | NO
+ pedidos  | valor      | numeric | NO
+(6 rows)
+
+Null display is "(NULL)".
+1. SELECT, FROM e ORDER BY: os quatro clientes
+ id | nome
+----+-------
+  1 | Ana
+  2 | Bruno
+  3 | Carla
+  4 | Diego
+(4 rows)
+
+2. WHERE: três pedidos pagos, inclusive o de valor zero
+ id  | cliente_id | valor
+-----+------------+--------
+ 101 |          1 | 100.00
+ 102 |          1 |  50.00
+ 105 |          4 |   0.00
+(3 rows)
+
+3. INNER JOIN: três linhas, sem Bruno e Carla
+ nome  | pedido_id | valor
+-------+-----------+--------
+ Ana   |       101 | 100.00
+ Ana   |       102 |  50.00
+ Diego |       105 |   0.00
+(3 rows)
+
+4. LEFT JOIN: cinco linhas, preservando Bruno e Carla
+ id | nome  | pedido_id | valor
+----+-------+-----------+--------
+  1 | Ana   |       101 | 100.00
+  1 | Ana   |       102 |  50.00
+  2 | Bruno |    (NULL) | (NULL)
+  3 | Carla |    (NULL) | (NULL)
+  4 | Diego |       105 |   0.00
+(5 rows)
+
+5. GROUP BY, COUNT e SUM: quatro linhas, soma nula sem pagamento
+ id | nome  | pedidos_pagos | total_pago
+----+-------+---------------+------------
+  1 | Ana   |             2 |     150.00
+  2 | Bruno |             0 |     (NULL)
+  3 | Carla |             0 |     (NULL)
+  4 | Diego |             1 |       0.00
+(4 rows)
+
+6. COALESCE: o relatório completo com zeros explícitos
+ id | nome  | pedidos_pagos | total_pago
+----+-------+---------------+------------
+  1 | Ana   |             2 |     150.00
+  2 | Bruno |             0 |       0.00
+  3 | Carla |             0 |       0.00
+  4 | Diego |             1 |       0.00
+(4 rows)
+
+CREATE VIEW
+Consulta inicial: devem aparecer Ana e Diego.
+ id | nome  | pedidos_pagos | total_pago
+----+-------+---------------+------------
+  1 | Ana   |             2 |     150.00
+  4 | Diego |             1 |       0.00
+(2 rows)
+
+ERROR:  FAIL: resultado diferente do contrato. Compare com docs/contrato.md
+CONTEXT:  PL/pgSQL function inline_code_block line 15 at RAISE
+1. Base: quatro clientes e cinco pedidos
+ id | nome
+----+-------
+  1 | Ana
+  2 | Bruno
+  3 | Carla
+  4 | Diego
+(4 rows)
+
+ id  | cliente_id |  status   | valor
+-----+------------+-----------+--------
+ 101 |          1 | pago      | 100.00
+ 102 |          1 | pago      |  50.00
+ 103 |          1 | cancelado | 900.00
+ 104 |          2 | cancelado |  80.00
+ 105 |          4 | pago      |   0.00
+(5 rows)
+
+2. LEFT JOIN antes do WHERE: seis linhas, incluindo Carla sem pedido
+ cliente_id | nome  | pedido_id |  status   | valor  | passa_no_where
+------------+-------+-----------+-----------+--------+----------------
+          1 | Ana   |       101 | pago      | 100.00 | t
+          1 | Ana   |       102 | pago      |  50.00 | t
+          1 | Ana   |       103 | cancelado | 900.00 | f
+          2 | Bruno |       104 | cancelado |  80.00 | f
+          3 | Carla |           |           |        | f
+          4 | Diego |       105 | pago      |   0.00 | t
+(6 rows)
+
+3. Status no ON: cinco linhas, preservando Bruno e Carla
+ cliente_id | nome  | pedido_id | status | valor
+------------+-------+-----------+--------+--------
+          1 | Ana   |       101 | pago   | 100.00
+          1 | Ana   |       102 | pago   |  50.00
+          2 | Bruno |           |        |
+          3 | Carla |           |        |
+          4 | Diego |       105 | pago   |   0.00
+(5 rows)
+
+CREATE VIEW
+ id | nome  | pedidos_pagos | total_pago
+----+-------+---------------+------------
+  1 | Ana   |             2 |     150.00
+  2 | Bruno |             0 |       0.00
+  3 | Carla |             0 |       0.00
+  4 | Diego |             1 |       0.00
+(4 rows)
+
+DO
+NOTICE:  PASS: os quatro clientes, contagens e totais correspondem ao contrato
+BEGIN
+UPDATE 5
+DO
+NOTICE:  PASS: cenário sem pedidos pagos
+ROLLBACK
+ id | nome  | linhas_da_juncao | pedidos_pagos | soma_sem_coalesce | total_pago
+----+-------+------------------+---------------+-------------------+------------
+  1 | Ana   |                2 |             2 |            150.00 |     150.00
+  2 | Bruno |                1 |             0 |                   |       0.00
+  3 | Carla |                1 |             0 |                   |       0.00
+  4 | Diego |                1 |             1 |              0.00 |       0.00
+(4 rows)
+
+VALIDAÇÃO OK: falha esperada na consulta inicial e testes aprovados na referência.

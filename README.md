@@ -21,6 +21,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A implem
 | Validação e revisão | [Laboratório de Pull Request](docs/laboratorio-pr.md) |
 | Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
 | IA como tutora | [Perguntas para diagnóstico](docs/prompts-tutora.md) |
+| Ferramenta e momento de uso da IA | [ChatGPT na atividade](docs/uso-da-ia.md) |
 | Registro de decisões | [Modelo](docs/registro-ia-modelo.md) e [exemplo ilustrativo](docs/registro-ia-exemplo.md) |
 
 ## Ambiente
@@ -36,6 +37,8 @@ bash demo.sh base
 ```
 
 A conexão usa TCP e autenticação por senha no ambiente Docker. Os dados são fictícios e descartáveis. Nenhuma porta está publicada no computador. O repositório é privado e o clone exige acesso à conta.
+
+**pgAdmin não é necessário neste ambiente.** A prática usa o psql para executar consultas reais. Banco: `workshop`. Schema: `ws4`. Objetos: `clientes`, `pedidos` e a view `resumo_clientes`. Consulte as diferenças entre servidor, banco, schema e cliente em [conexão PostgreSQL](docs/conexao-postgresql.md).
 
 ## Exploração das consultas
 
@@ -53,6 +56,8 @@ bash demo.sh passos
 
 A sequência apresenta seleção de colunas, filtro, INNER JOIN, LEFT JOIN, agrupamento, contagem, soma e tratamento de valores nulos.
 
+O arquivo de exemplos contém também comandos do psql iniciados por barra invertida. Esses comandos não são SQL e não devem ser colados em editores gráficos de consulta. Os blocos SELECT são SQL PostgreSQL.
+
 ## Consulta inicial e testes
 
 ```bash
@@ -66,6 +71,7 @@ Na `main`, o teste deve falhar: a consulta inicial omite clientes exigidos pelo 
 | Comando | Finalidade |
 |---|---|
 | `bash demo.sh conexao` | Mostrar conexão, banco, usuário, porta e versão |
+| `bash demo.sh estrutura` | Listar o schema, objetos e campos do exercício |
 | `bash demo.sh diagnosticar` | Comparar as linhas produzidas pela junção |
 | `bash demo.sh contagem` | Comparar COUNT(*), COUNT(p.id), SUM e COALESCE |
 | `bash demo.sh definicao` | Consultar a definição da view aplicada no banco |
@@ -80,7 +86,7 @@ Os comandos `inicio` e `referencia` alteram a view no banco, sem modificar o arq
 bash scripts/validar-ambiente.sh
 ```
 
-A validação usa um banco separado. Confere conexão, rejeição de senha incorreta, consultas e testes. O ambiente separado é removido ao terminar. As [saídas da validação](docs/validacao/conexao-e-consultas-20261117.txt) incluem as falhas negativas esperadas e a aprovação final.
+A validação usa um banco separado. Confere conexão, rejeição de senha incorreta, consultas e testes. O ambiente separado é removido ao terminar. As [saídas da validação](docs/validacao/conexao-e-consultas-20261118.txt) incluem as falhas negativas esperadas e a aprovação final.
 
 Para registrar uma execução própria:
 
@@ -92,7 +98,7 @@ O arquivo gerado inclui commit, alterações locais, definição efetiva da view
 
 ## Uso da IA
 
-Neste encontro, a IA atua como **Tutora**: explica conceitos e ajuda a investigar o problema. A implementação, a execução e a validação ficam com a pessoa que está desenvolvendo.
+Neste encontro, usaremos o **ChatGPT como Tutora**, em conversa de texto, principalmente após o teste revelar o problema da consulta inicial. O ChatGPT explica conceitos e ajuda a investigar o filtro, sem conexão ao banco. A implementação, a execução e a validação ficam com a pessoa que está desenvolvendo. Veja [qual IA usar e em que momento](docs/uso-da-ia.md).
 
 Registre tarefa delegada, motivo, orientação recebida, decisão, evidência e retrabalho. Use o modelo para suas interações reais. O exemplo disponível é fictício e está identificado como ilustração.
 
