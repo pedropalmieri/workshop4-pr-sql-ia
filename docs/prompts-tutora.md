@@ -1,25 +1,29 @@
-# Prompts para IA como tutora
+# Prompts especializados para IA como Tutora
 
-Ferramenta da atividade: **ChatGPT em conversa de texto no navegador**. O uso principal acontece depois que a consulta inicial e o teste expõem o erro. Consulte [uso da IA](uso-da-ia.md) para a sequência completa. O papel de Tutora corresponde ao degrau vigente da Sprint 1.
+Os prompts estão organizados em [prompts/README.md](../prompts/README.md), com arquivos de texto prontos para copiar e apresentar à turma. Podem ser usados no ChatGPT ou em outro assistente de linguagem, sem depender de licença Copilot ou integração com o GitHub.
 
-## Diagnóstico
+## Contexto e tarefa em cada prompt
 
-"Você é minha tutora de SQL. Não escreva a consulta corrigida nem edite arquivos. O requisito exige todos os clientes. Minha consulta usa LEFT JOIN e depois WHERE p.status = 'pago'. Bruno só tem pedidos cancelados e Carla não tem pedidos. Ambos desapareceram. Explique a ordem lógica relevante e faça duas perguntas para eu localizar o erro."
+Cada prompt completo informa o papel de Tutora, a estrutura das tabelas, os dados fictícios, o contrato e o resultado esperado. Em seguida, delimita uma tarefa e o formato da resposta. Isso permite mudar de ferramenta sem depender de uma conversa anterior.
 
-## Testes
+| Tarefa | Prompt |
+|---|---|
+| Diagnosticar a consulta inicial e investigar clientes ausentes | [01 · Diagnóstico](../prompts/01-diagnosticar-consulta.txt) |
+| Revisar uma alteração feita pelo Fellow | [02 · Revisão conceitual](../prompts/02-revisar-alteracao-humana.txt) |
+| Compreender os cenários de teste | [03 · Testes](../prompts/03-planejar-testes-consulta.txt) |
+| Explicar COUNT(*), COUNT(p.id), NULL, SUM e zero | [04 · Agregações](../prompts/04-explicar-count-e-zero.txt) |
+| Avaliar a hipótese de remover totais zero com evidência | [05 · Análise crítica](../prompts/05-avaliar-alternativa-com-evidencia.txt) |
+| Interpretar um plano real de execução | [06 · EXPLAIN](../prompts/06-interpretar-plano-execucao.txt) |
+| Examinar diff, testes e rastreabilidade de um PR | [07 · Pull Request](../prompts/07-analisar-pull-request.txt) |
+| Organizar um registro sem inventar interações | [08 · Registro real](../prompts/08-organizar-registro-real.txt) |
+| Corrigir uma resposta que saiu do papel de Tutora | [09 · Redirecionamento](../prompts/09-redirecionar-para-tutoria.txt) |
 
-Prompt complementar para aprofundamento, sem necessidade de usar todos os prompts no encontro.
+## Limites do uso
 
-"Sem escrever SQL, sugira casos de teste para contar pedidos pagos por cliente, incluindo clientes sem pedidos. Explique o resultado esperado de cada caso. Eu vou implementar e executar os testes."
+O Fellow implementa, executa, testa e decide. Os prompts pedem explicações e perguntas, sem código corrigido completo, patches ou aprovação de merge. Também distinguem fatos, hipóteses e informações ausentes.
 
-## Discussão de uma alternativa
+O plano de resposta solicitado não garante que qualquer modelo siga todas as instruções. Se houver código pronto, conclusão sem evidência ou ampliação do escopo, use o prompt 09 e avalie criticamente a resposta.
 
-A hipótese abaixo é apresentada pela pessoa que pergunta. Não a registre como sugestão espontânea da IA.
+O prompt 05 apresenta uma hipótese da própria pessoa. Registre essa origem. O prompt 08 organiza apenas a conversa e a validação reais. Nenhuma sugestão aceita ou rejeitada deve ser fabricada para preencher o registro.
 
-"Um colega propôs remover clientes com total zero para simplificar o relatório. Compare a ideia com este requisito: todos os clientes devem aparecer e um pedido pago de valor zero é válido. Não escreva código. Que evidência permitiria aceitar ou rejeitar a ideia?"
-
-## Se a IA gerar código pronto
-
-"Retorne ao papel de tutora: explique o conceito e faça perguntas, sem implementar. Vou escrever a alteração e validá-la."
-
-Respostas de IA são variáveis. Registre somente o que realmente ocorreu. O exemplo de sugestão rejeitada do material é uma simulação didática e não deve ser apresentado como interação real.
+A análise não cria entrega adicional. O [uso da IA](uso-da-ia.md), o [contrato](contrato.md) e o [modelo de registro](registro-ia-modelo.md) completam a documentação da atividade.

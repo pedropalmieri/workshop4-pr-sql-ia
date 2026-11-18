@@ -26,7 +26,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | Aplicação da main no banco após o merge | [Fluxo de aplicação e consulta do resultado](docs/aplicacao-main.md) |
 | Validação e revisão | [Laboratório de Pull Request](docs/laboratorio-pr.md) |
 | Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
-| IA como tutora | [Perguntas para diagnóstico](docs/prompts-tutora.md) |
+| IA como tutora: prompts para qualquer assistente | [Biblioteca de prompts completos](prompts/README.md) e [guia de uso](docs/prompts-tutora.md) |
 | Ferramenta e momento de uso da IA | [ChatGPT na atividade](docs/uso-da-ia.md) |
 | Revisão SQL pelo Copilot: contexto e disponibilidade | [Configuração preparada e limitações do plano](docs/revisao-copilot.md) |
 | Registro de decisões | [Modelo](docs/registro-ia-modelo.md) e [exemplo ilustrativo](docs/registro-ia-exemplo.md) |

@@ -2,7 +2,7 @@
 
 ## Ferramenta da atividade
 
-Usaremos **ChatGPT, em conversa de texto no navegador**, para discutir os conceitos da consulta. O modelo disponível na conta pode variar. Registre a ferramenta e o nome do modelo exibido, quando houver, sem depender de uma versão específica para reproduzir a atividade.
+Usaremos **ChatGPT, em conversa de texto no navegador**, para discutir os conceitos da consulta. Os [prompts completos](../prompts/README.md) também podem ser usados em outro assistente de linguagem; não dependem de recursos específicos do ChatGPT. O modelo disponível na conta pode variar. Registre a ferramenta e o nome do modelo exibido, quando houver, sem depender de uma versão específica para reproduzir a atividade.
 
 Os dados do exercício são fictícios. O ChatGPT não recebe credenciais e não se conecta ao PostgreSQL. As consultas são exploradas no pgAdmin, com o banco no Docker. Os testes usam o psql pelo terminal. O código é alterado no editor e validado pelos testes do repositório.
 
