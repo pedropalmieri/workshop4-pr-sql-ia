@@ -29,3 +29,7 @@ O [modelo de registro](registro-ia-modelo.md) reúne tarefa delegada, justificat
 Não invente uma sugestão incorreta ou uma conversa para preencher o registro. Avaliar uma hipótese apresentada pelo próprio aluno não significa que a IA a sugeriu. O [exemplo ilustrativo](registro-ia-exemplo.md) é fictício e serve apenas para explicar o formato.
 
 Se a resposta vier com código pronto, peça uma explicação conceitual e perguntas, conforme o prompt de redirecionamento. Se o serviço estiver indisponível, a análise pode continuar com os dados e o SQL comentado. Nesse caso, não haverá uma interação real de IA a registrar.
+
+## Revisão no GitHub com Copilot
+
+Como complemento solicitado para o laboratório, o repositório contém instruções para orientar comentários de revisão SQL do Copilot. A conta atual está no Copilot Free; a revisão de PRs não está ativa. Veja [disponibilidade e configuração](revisao-copilot.md). A preparação não substitui a conversa de tutoria nem os testes executados no PostgreSQL, e não cria uma entrega adicional.
