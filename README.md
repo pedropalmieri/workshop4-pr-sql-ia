@@ -187,3 +187,7 @@ O [exemplo de compatibilidade](docs/alteracao-coluna-e-rastreabilidade.md) mostr
 ## Processo de aprovação e release
 
 Cada pessoa usa sua própria conta. O [processo de deploy BD](docs/processo-release-bd.md) relaciona card, autor, revisão por outra pessoa, aprovação da release, execução e conferência. O laboratório explicita quais controles estão automatizados e quais aprovações são demonstradas como processo de equipe.
+
+## Tags e releases
+
+Após a confirmação no banco, a automação publica tags anotadas `bd-vNNNN` e releases no GitHub, apontando para o commit registrado em cada versão. Veja [como conferir a release e seu commit](docs/tags-e-releases.md).

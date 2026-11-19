@@ -46,3 +46,7 @@ O acionamento manual em Actions permite reaplicar a main. Isso executa somente v
 O relatório `ws4.resumo_clientes` e `sql/estado-demonstracao.txt` preservam a investigação do Workshop 4. No estado inicial, o contrato deve falhar por ausência de Bruno e Carla. No corrigido, os dois cenários devem passar. O teste de reprodução da falha não equivale à aprovação do contrato de negócio.
 
 A correção e o retorno estão registrados nos PRs nº 1 e nº 2. Para novas consultas e releases, use o catálogo numerado. A [arquitetura](arquitetura-automacao.md) e os [registros de validação](validacao/) explicam a implementação e o histórico.
+
+## Tags e releases
+
+Após a confirmação no banco, a automação publica tags anotadas `bd-vNNNN` e releases no GitHub, apontando para o commit registrado em cada versão. Veja [como conferir a release e seu commit](tags-e-releases.md).

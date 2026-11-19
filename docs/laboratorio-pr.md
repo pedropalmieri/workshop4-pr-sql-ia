@@ -18,13 +18,13 @@ git switch develop
 git pull --ff-only
 ```
 
-Preserve alterações próprias pendentes antes de trocar de branch. Confira o maior número já publicado em `consultas/`. Depois das versões 01 a 06, o próximo número é 07. Se outra versão já tiver sido publicada, use o número seguinte.
+Preserve alterações próprias pendentes antes de trocar de branch. Confira o maior número já publicado em `consultas/`. Depois das versões 01 a 07, o próximo número é 08. Se outra versão já tiver sido publicada, use o número seguinte.
 
 ## 3. Criar o arquivo e seu teste
 
-No editor, crie `consultas/07_Select_Client_Report.sql`. Para reproduzir a falha antes da correção, copie o conteúdo de `exemplos/consulta-inicial.sql`. Crie também `consultas/testes/07_Select_Client_Report.json`, usando como referência o contrato em `consultas/testes/03_Select_Client_Report.json`.
+No editor, crie `consultas/08_Select_Client_Report.sql`. Para reproduzir a falha antes da correção, copie o conteúdo de `exemplos/consulta-inicial.sql`. Crie também `consultas/testes/08_Select_Client_Report.json`, usando como referência o contrato em `consultas/testes/03_Select_Client_Report.json`.
 
-O teste deve exigir os quatro clientes e os totais calculados manualmente. Não altere a expectativa para aceitar o retorno incorreto. O arquivo 03 continua preservado. Os ajustes no arquivo 07 são permitidos enquanto ele ainda não tiver sido publicado na main.
+O teste deve exigir os quatro clientes e os totais calculados manualmente. Não altere a expectativa para aceitar o retorno incorreto. O arquivo 03 continua preservado. Os ajustes no arquivo 08 são permitidos enquanto ele ainda não tiver sido publicado na main.
 
 ## 4. Investigar, corrigir e justificar
 
@@ -64,7 +64,7 @@ Confira o resultado, a sintaxe e o teste JSON. Uma falha esperada da consulta in
 ```bash
 git diff -- consultas/
 git status --short
-git add consultas/07_Select_Client_Report.sql consultas/testes/07_Select_Client_Report.json
+git add consultas/08_Select_Client_Report.sql consultas/testes/08_Select_Client_Report.json
 git commit -m "Publica consulta de pagamentos com contrato validado"
 git push origin develop
 ```
