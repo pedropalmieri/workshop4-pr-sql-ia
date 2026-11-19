@@ -1,0 +1,13 @@
+{
+  "descricao": "Somente o comentário do campo descricao muda; o SELECT vigente permanece válido",
+  "verificacoes": [
+    {
+      "sql": "SELECT d.description AS comentario FROM pg_catalog.pg_description d\nJOIN pg_catalog.pg_class c ON c.oid=d.objoid\nJOIN pg_catalog.pg_namespace n ON n.oid=c.relnamespace\nJOIN pg_catalog.pg_attribute a ON a.attrelid=c.oid AND a.attnum=d.objsubid\nWHERE n.nspname='ws4_demo' AND c.relname='teste_deploy' AND a.attname='descricao';",
+      "esperado": [
+        {
+          "comentario": "Descrição da execução de demonstração do deploy BD"
+        }
+      ]
+    }
+  ]
+}

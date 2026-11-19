@@ -25,7 +25,9 @@ Se vários scripts foram aplicados no mesmo merge, suas tags apontam para o mesm
 
 A criação de tags usa o GITHUB_TOKEN do workflow com permissão de escrita no repositório. A credencial não é salva no clone nem incluída nos scripts SQL. Os jobs de testes continuam com leitura. Nenhum token pessoal precisa ser colocado no repositório.
 
-A automação também pode identificar versões antigas já registradas no banco e publicar suas tags com o commit original. Ela nunca move uma tag existente para outro commit; uma divergência interrompe essa etapa para revisão. Reexecutar não duplica tags ou releases.
+As versões anteriores à adoção desta etapa precisam ter suas tags históricas cadastradas com uma conta autorizada, apontando para os commits originais registrados no banco. Neste laboratório, o proprietário criou as tags 01 a 06; o workflow publica as respectivas releases e a tag da versão nova. A API pode exigir permissão adicional para criar referências históricas com o token temporário do Actions.
+
+A automação nunca move uma tag existente para outro commit; uma divergência interrompe essa etapa para revisão. Reexecutar não duplica tags ou releases.
 
 ## Conferir no GitHub e no clone
 
@@ -53,3 +55,9 @@ Não crie uma tag de “aplicado” antes de o banco confirmar a execução. Tag
 A confirmação SQL acontece antes da chamada à API do GitHub. Se a API falhar, o banco pode já estar atualizado, e o workflow ficará com falha nessa etapa. Isso não desfaz automaticamente o deploy confirmado. Confira `ws4_controle.versoes` e os logs antes de agir. Depois de resolver o acesso ao GitHub, execute o workflow manualmente na main para reconciliar as tags/release ausentes. Os scripts já aplicados serão preservados.
 
 A consulta `07_Select_Test_Table.sql` valida a tabela final das etapas 04 a 06. Como os testes temporários usam ROLLBACK, seu resultado esperado é vazio. Se forem inseridos dados permanentes nessa tabela, esse contrato de laboratório deve ser reavaliado em nova versão.
+
+Referência: [permissões para criar referências Git](https://docs.github.com/en/rest/git/refs#create-a-reference).
+
+## Exemplo de mudança pequena
+
+`08_Alter_Test_Table_Comment.sql` muda somente a descrição documental de `teste_deploy.descricao`. O contrato lê o comentário nos catálogos do PostgreSQL e as consultas vigentes continuam sendo testadas. A etapa também permite acompanhar uma nova tag criada pelo workflow no commit dessa publicação.
