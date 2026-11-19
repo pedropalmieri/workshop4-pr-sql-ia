@@ -14,6 +14,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 
 | Tema | Material |
 |---|---|
+| Caso completo, com enunciado, perguntas e resolução | [Estudo de caso passo a passo](docs/estudo-de-caso.md) |
 | Apresentação | [Slides](materiais/Workshop4-19nov2026.pptx) |
 | Interface gráfica e instalação Docker | [pgAdmin](docs/pgadmin.md) |
 | Ambiente e acesso ao banco | [Conexão PostgreSQL](docs/conexao-postgresql.md) |
