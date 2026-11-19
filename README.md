@@ -4,6 +4,12 @@
 
 Como verificar se uma consulta atende ao requisito, além de executar sem erros? Neste workshop, usamos um relatório de clientes e pedidos para investigar o resultado, testar uma correção e revisar a alteração em um Pull Request.
 
+## Desenvolvimento e publicação
+
+As alterações são feitas na **develop**. Novas consultas e migrações ficam em [consultas/](consultas/README.md), com numeração única e teste correspondente. Preserve os scripts anteriores. O push na develop dispara os Actions; a promoção acontece por PR **develop → main**, com os quatro checks aprovados e merge manual.
+
+A main está protegida contra push direto, force push e exclusão, incluindo administradores. Ela simula as versões liberadas para o banco. Consulte o [fluxo básico completo](docs/fluxo-develop-main.md), incluindo criação do script, teste, PR, publicação e conferência.
+
 ## Caso: relatório de pedidos pagos
 
 O relatório precisa incluir **todos os clientes**, contar apenas pedidos pagos e mostrar zero quando não houver pagamento. O conjunto de dados inclui clientes sem pedidos, pedidos cancelados e um pedido pago de valor zero.
@@ -15,6 +21,8 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | Tema | Material |
 |---|---|
 | Caso completo, com enunciado, perguntas e resolução | [Estudo de caso passo a passo](docs/estudo-de-caso.md) |
+| Padrão dos novos scripts SQL e modelos ALTER TABLE | [Catálogo versionado](consultas/README.md) |
+| Fluxo develop, validação e publicação na main | [Guia do fluxo](docs/fluxo-develop-main.md) |
 | Apresentação | [Slides](materiais/Workshop4-19nov2026.pptx) |
 | Interface gráfica e instalação Docker | [pgAdmin](docs/pgadmin.md) |
 | Ambiente e acesso ao banco | [Conexão PostgreSQL](docs/conexao-postgresql.md) |
@@ -25,7 +33,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | Exemplos numerados para executar no pgAdmin | [Sequência de demonstração](exemplos/demonstracao/README.md) |
 | Análise do problema e da solução | [SQL comentado](docs/sql-comentado.md) |
 | Aplicação da main no banco após o merge | [Fluxo de aplicação e consulta do resultado](docs/aplicacao-main.md) |
-| Onde editar o SQL e como abrir o PR, etapa por etapa | [Da consulta ao Pull Request](docs/laboratorio-pr.md) |
+| Análise do exercício anterior e sua correção | [Da consulta ao Pull Request](docs/laboratorio-pr.md) |
 | Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
 | IA como tutora: prompts para qualquer assistente | [Contexto único e prompts curtos](prompts/README.md) e [guia de uso](docs/prompts-tutora.md) |
 | Ferramenta e momento de uso da IA | [Orientações de uso da IA](docs/uso-da-ia.md) |
@@ -83,7 +91,7 @@ Use os blocos de [consultas-pgadmin.sql](exemplos/consultas-pgadmin.sql), um SEL
 
 Para acompanhar cada conceito em um arquivo separado, use a [sequência numerada](exemplos/demonstracao/README.md): conexão, dados, filtros, JOINs, agregações e validação. Cada arquivo informa seu objetivo e o resultado esperado.
 
-O PostgreSQL é acessado pelo pgAdmin em **db:5432**, banco **workshop**, schema **ws4**. Somente a interface é publicada no computador em 127.0.0.1:5050. Os dados são fictícios e descartáveis. O repositório é privado e o clone exige acesso.
+O PostgreSQL é acessado pelo pgAdmin em **db:5432**, banco **workshop**, schema **ws4**. Somente a interface é publicada no computador em 127.0.0.1:5050. Os dados são fictícios e descartáveis. O repositório é público para leitura. O envio de alterações na develop exige permissão de escrita.
 
 ## Terminal e testes
 
@@ -146,7 +154,7 @@ O arquivo gerado inclui commit, alterações locais, SQL efetivamente aplicado e
 
 ## Aplicação após o merge
 
-O workflow **Testes SQL** valida o PR em um banco temporário. Após o merge de um PR destinado à `main` com alteração em `sql/`, **Aplicar main no banco de demonstracao** aplica e testa a consulta no PostgreSQL do laboratório, mantendo o banco disponível no pgAdmin. A aplicação só confirma a mudança se os testes do estado declarado passarem. O retorno ao estado `inicial` é explícito e não significa aprovação da regra de negócio. Aprovar o PR, por si só, não aplica o SQL: é necessário fazer o merge. O acionamento manual está disponível na `main`. Um push direto ou uma mudança apenas em documentação não dispara essa aplicação. Veja [o fluxo completo e a consulta do commit aplicado](docs/aplicacao-main.md).
+O workflow **Testes SQL** valida o push na develop e o PR em banco temporário. Após o merge de um PR da `develop` para a `main` com alteração em `sql/` ou `consultas/`, **Aplicar main no banco de demonstracao** aplica e testa a consulta no PostgreSQL do laboratório, mantendo o banco disponível no pgAdmin. A aplicação só confirma a mudança se os testes do estado declarado passarem. O retorno ao estado `inicial` é explícito e não significa aprovação da regra de negócio. Aprovar o PR, por si só, não aplica o SQL: é necessário fazer o merge. O acionamento manual está disponível na `main`. Um push direto ou uma mudança apenas em documentação não dispara essa aplicação. Veja [o fluxo completo e a consulta do commit aplicado](docs/aplicacao-main.md).
 
 ## Uso da IA
 
@@ -170,3 +178,11 @@ O volume de configuração do pgAdmin permanece. Os dados do PostgreSQL ficam em
 ## Referências
 
 [JOIN no PostgreSQL](https://www.postgresql.org/docs/current/tutorial-join.html), [agregações](https://www.postgresql.org/docs/current/functions-aggregate.html) e [Pull Requests no GitHub](https://docs.github.com/en/pull-requests/reference/pull-requests).
+
+### Evolução de colunas e impacto nos relatórios
+
+O [exemplo de compatibilidade](docs/alteracao-coluna-e-rastreabilidade.md) mostra criação de cadastro, SELECT, alteração de coluna, falha de regressão e nova consulta compatível, com scripts numerados e histórico preservado. Também diferencia renomear um campo de alterar apenas sua descrição.
+
+## Processo de aprovação e release
+
+Cada pessoa usa sua própria conta. O [processo de deploy BD](docs/processo-release-bd.md) relaciona card, autor, revisão por outra pessoa, aprovação da release, execução e conferência. O laboratório explicita quais controles estão automatizados e quais aprovações são demonstradas como processo de equipe.

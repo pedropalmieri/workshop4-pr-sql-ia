@@ -4,7 +4,7 @@
 
 Em 18/11/2026, a conta `pedropalmieri` aparece com **GitHub Copilot Free**. A interface informa que revisões de IA exigem upgrade. A revisão de PRs não foi habilitada nem testada nesta conta. Nenhuma assinatura foi contratada.
 
-O repositório é privado e a API de rulesets respondeu que o plano atual exige GitHub Pro ou repositório público para usar essa configuração. A visibilidade permanece privada. Essa limitação é distinta da licença Copilot: ter GitHub Pro não equivale a ter Copilot Pro.
+Na verificação de 18/11/2026, o repositório ainda era privado e a configuração de proteção foi bloqueada pelo plano. Em 19/11/2026, após torná-lo público, a proteção da main foi habilitada. Essa mudança não concede licença Copilot: a revisão de IA continua indisponível no Copilot Free.
 
 As [instruções de revisão](../.github/copilot-instructions.md) estão preparadas. Elas fornecem o contrato, os dados e os pontos de atenção do SQL. O arquivo, sozinho, não ativa um revisor.
 

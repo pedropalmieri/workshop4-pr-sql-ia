@@ -1,0 +1,19 @@
+{
+  "descricao": "Base artificial de float",
+  "verificacoes": [
+    {
+      "sql": "SELECT id,quantidade FROM ws4_demo.metricas ORDER BY id",
+      "esperado": [
+        {
+          "id": 1,
+          "quantidade": 12.0
+        },
+        {
+          "id": 2,
+          "quantidade": 5.0
+        }
+      ],
+      "ordenado": true
+    }
+  ]
+}

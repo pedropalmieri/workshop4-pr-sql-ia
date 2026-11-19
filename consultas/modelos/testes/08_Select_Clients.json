@@ -1,0 +1,15 @@
+{
+  "descricao": "08_Select_Clients",
+  "contrato": "cadastro-demo",
+  "resultado": [
+    {
+      "id": 1,
+      "description": "Ana"
+    },
+    {
+      "id": 2,
+      "description": "Bruno"
+    }
+  ],
+  "ordenado": true
+}

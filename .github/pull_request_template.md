@@ -1,22 +1,31 @@
-## Problema e requisito
+## Card e release
 
-Qual resultado incorreto existia? Qual regra deve valer?
+Card relacionado: #...
+Release planejada: bd-v...
+Autor: conta individual que abriu o PR.
+Revisor: outra pessoa, que registra a decisão com sua conta.
+Aprovação de liberação: link da decisão no card, antes do merge.
 
-## Alteração
+## Objetivo e impacto
 
-O que mudou na consulta e por quê?
+Qual requisito ou mudança de estrutura esta release atende? A consulta é de leitura ou existe alteração DDL?
+
+## Versões novas
+
+Liste os scripts `consultas/NN_Operacao_Objeto.sql` e seus testes. Preserve as versões anteriores. Se este PR trata do exercício em `sql/`, identifique o estado declarado.
 
 ## Validação
 
-- [ ] Comparei com o contrato calculado manualmente.
-- [ ] Executei o teste com os quatro perfis de cliente.
-- [ ] Executei o cenário sem pedidos pagos.
-- [ ] Incluí o caminho da evidência real gerada por scripts/registrar-evidencia.sh (docs/evidencias-AAAAMMDD-HHMMSS.txt, por padrão).
+- [ ] Trabalhei na develop e o PR tem destino main.
+- [ ] Os checks origem, sql, interface e versoes passaram na versão final.
+- [ ] Calculei o resultado/estrutura esperados independentemente do script.
+- [ ] Avaliei impacto nos dados e dependências. Não há perda de dados implícita na conversão.
+- [ ] Registrei a evidência e a validação reais.
 
-## Uso da IA
+## IA Tutora
 
-Link para registro de tarefa, justificativa, sugestão aceita e rejeitada, evidência e retrabalho humano. Ferramenta da atividade: ChatGPT. Papel: Tutora. Identifique exemplos fictícios como ilustrativos.
+Identifique ferramenta, tarefa, orientação, decisão e validação, quando usada. Não invente interações nem trate exemplos como evidência real.
 
-## Revisão
+## Conferência após merge
 
-Pessoa revisora: verificar o filtro ON/WHERE, COUNT(p.id), zeros e evidências antes do merge.
+Indique a consulta para conferir a tabela ou o resultado e o registro em ws4_controle.versoes.

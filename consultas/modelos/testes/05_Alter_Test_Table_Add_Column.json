@@ -1,0 +1,13 @@
+{
+  "descricao": "05_Alter_Test_Table_Add_Column",
+  "verificacoes": [
+    {
+      "sql": "SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='execucoes' AND column_name='observacao') AS existe;",
+      "esperado": [
+        {
+          "existe": true
+        }
+      ]
+    }
+  ]
+}

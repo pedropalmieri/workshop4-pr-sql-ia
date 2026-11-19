@@ -5,16 +5,19 @@ on:
     branches: [main]
     paths:
       - sql/**
+      - consultas/**
   workflow_dispatch:
 permissions:
   contents: read
+  checks: read
+  actions: read
 concurrency:
   group: banco-demonstracao-workshop4
   cancel-in-progress: false
 jobs:
   aplicar:
     if: >-
-      (github.event_name == 'pull_request' && github.event.pull_request.merged == true) ||
+      (github.event_name == 'pull_request' && github.event.pull_request.merged == true && github.event.pull_request.head.ref == 'develop' && github.event.pull_request.head.repo.full_name == github.repository) ||
       (github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main')
     runs-on: [self-hosted, Linux, ARM64, ws4-banco-demo]
     timeout-minutes: 5
@@ -23,5 +26,25 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.merge_commit_sha || github.sha }}
           persist-credentials: false
+          fetch-depth: 0
+      - name: Conferir promoção e validações
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ github.token }}
+          PR_HEAD_SHA: ${{ github.event.pull_request.head.sha || github.sha }}
+        run: python3 scripts/conferir-promocao.py
+      - name: Identificar alteração no exercício anterior
+        id: escopo
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          if [ -z "$BASE" ] || git diff --name-only "$BASE" HEAD -- sql/ | grep -q .; then
+            echo 'legado=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'legado=false' >> "$GITHUB_OUTPUT"
+          fi
       - name: Aplicar SQL e validar no PostgreSQL existente
+        if: steps.escopo.outputs.legado == 'true'
         run: bash scripts/aplicar-no-banco.sh
+      - name: Publicar novos scripts SQL e registrar resultados
+        run: /opt/ws4/bin/python scripts/versoes_sql.py aplicar

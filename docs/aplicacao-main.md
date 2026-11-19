@@ -1,62 +1,48 @@
-# Do Pull Request ao banco de demonstração
+# Publicação da develop para a main e execução no banco
 
-O PR valida a mudança em um banco temporário do GitHub Actions. Após o merge, um segundo workflow aplica o SQL da `main` no PostgreSQL já usado pelo pgAdmin. O banco continua ligado e os dados de clientes e pedidos permanecem.
+A [pasta consultas/](../consultas/README.md) contém os scripts numerados e seus testes. O [guia completo](fluxo-develop-main.md) mostra como criar uma versão, validar, abrir PR e conferir o banco.
 
-## Fluxo
+## Fluxo atual
 
-1. Crie uma branch e altere `sql/02_consulta.sql`.
-2. Faça commit, push e abra o PR. O workflow **Testes SQL** valida a consulta em ambiente temporário.
-3. Confira os testes e revise o diff e as decisões registradas. Aprovar o PR não altera o banco.
-4. Faça o merge na `main`. O evento de PR mesclado dispara **Aplicar main no banco de demonstracao** quando o SQL mudou.
-5. O executor `workshop4-docker`, em Docker no computador do laboratório, aplica e testa o SQL no banco existente.
-6. Confira no log do workflow os resultados antes e depois, o commit e os testes. No pgAdmin, execute novamente o SELECT abaixo para atualizar o resultado exibido.
+1. Altere a develop. Novos scripts são adicionados a `consultas/`, sem modificar versões já incorporadas à main.
+2. O push executa os checks em bancos temporários do GitHub. Não publica no banco da demonstração.
+3. Abra um PR com origem develop e destino main. A origem e os quatro checks são obrigatórios.
+4. Revise o diff e confirme o merge. A proteção também vale para administradores.
+5. Um merge que altera `consultas/` ou `sql/` dispara a aplicação no PostgreSQL existente do laboratório.
+6. Confira o log, o resumo e o histórico de versões no banco.
 
 ```sql
-SELECT * FROM ws4.resumo_clientes ORDER BY id;
-
-SELECT obj_description('ws4.resumo_clientes'::regclass) AS ultima_aplicacao;
+SELECT versao, arquivo, commit_sha, execucao, aplicado_em, resultado
+FROM ws4_controle.versoes
+ORDER BY versao;
 ```
 
-O segundo SELECT identifica o commit e a execução que aplicaram a consulta. Os arquivos de apresentação, documentação e exemplos, isoladamente, não disparam a aplicação. Alterações nos testes SQL também acionam o workflow para verificar o contrato.
+O SELECT de um script de consulta produz linhas, mas não cria automaticamente uma nova tabela nem altera pedidos. O código fica publicado no Git e sua execução fica registrada no histórico. Um script DDL, por sua vez, pode alterar a estrutura indicada no modelo.
 
-## Aplicação com validação na mesma transação
+## Validações do catálogo
 
-No estado `corrigido`, o script `scripts/aplicar-no-banco.sh` executa a consulta de `sql/02_consulta.sql` e os testes de `sql/03_testes.sql` na mesma transação. O cenário que cancela os pedidos usa um savepoint e restaura os dados antes de concluir. Se qualquer teste falhar, o PostgreSQL desfaz a aplicação, incluindo a alteração da consulta. A execução do workflow fica com falha e a versão anterior permanece no banco.
+O check `versoes` confere nomes e números únicos, presença dos testes, preservação do histórico em relação à base do PR, sintaxe do PostgreSQL 17, comandos permitidos no laboratório e resultados esperados. Também executa testes positivos e negativos dos modelos.
 
-A aplicação não carrega `sql/01_base.sql`, não recria o banco e não encerra os serviços. Ela exige o laboratório previamente inicializado. As execuções são serializadas pelo workflow e por uma trava transacional no PostgreSQL.
+A execução registra o hash conjunto do SQL e do teste. Uma versão aplicada é preservada; alteração posterior do mesmo arquivo é rejeitada. Uma nova correção deve usar o próximo número. Scripts e testes removidos ou renomeados também são rejeitados.
 
-Aprovação, merge e aplicação são eventos distintos. Fechar um PR sem merge não aplica a consulta. Um push direto na main também não dispara a aplicação. O workflow também aceita acionamento manual em **Actions > Aplicar main no banco de demonstracao > Run workflow**, somente na `main`. O acionamento manual reaplica o SQL atual da `main`.
+Os testes de SELECT declaram o resultado esperado. Os testes de DDL verificam a estrutura criada ou alterada. Uma saída com nomes de coluna repetidos é rejeitada: use aliases claros.
 
-## Estado inicial do exercício
+## Transação e repetição
 
-O PR nº 1 foi mesclado e aplicou a correção com sucesso. O retorno para o início do exercício é uma nova alteração versionada e mantém esse histórico.
+O lote de versões novas do catálogo é executado em uma transação. Se um script ou teste falhar, nenhuma dessas versões novas é confirmada. O histórico já existente permanece. Repetir a aplicação não executa novamente versões com o mesmo hash.
 
-`sql/estado-demonstracao.txt` declara o estado esperado:
+O exercício anterior em `sql/` mantém seu próprio fluxo transacional e os estados inicial/corrigido. Ele só é reaplicado quando `sql/` muda ou em acionamento manual. Sua transação é separada do lote do catálogo. A publicação de uma nova consulta em `consultas/` não substitui automaticamente a consulta desse exercício.
 
-- `corrigido` (também o padrão sem arquivo): exige os dois cenários do contrato. Uma consulta incorreta é rejeitada e desfeita.
-- `inicial`: exige que `sql/02_consulta.sql` seja idêntico a `exemplos/consulta-com-erro.sql`. Aplica somente essa versão original e verifica Ana e Diego, preservando a base. O resumo informa que o contrato NÃO é atendido. O teste `bash demo.sh testar` continua falhando, como deve ocorrer antes da correção.
+## Configuração e disponibilidade
 
-O workflow de PR também confirma a falha do contrato no estado inicial. O teste de reprodução não transforma essa falha funcional em aprovação.
+O executor Docker `workshop4-docker` usa a rede do PostgreSQL do laboratório. Não é usado nos jobs de PR. A aplicação confere o commit mesclado e a validação final do PR. Fechar sem merge, usar outra origem ou fazer apenas push na develop não aplica os scripts nesse banco.
 
-Para uma nova correção por PR, altere o SQL e mude o estado para `corrigido` no mesmo PR. Depois do merge, o workflow aplica a versão e exige o contrato completo.
+Docker Desktop, banco e executor precisam estar ligados. O PostgreSQL usa armazenamento temporário: encerrar ou recriar seu contêiner descarta dados e histórico local. Nesse caso, prepare novamente a base; o catálogo pode ser reconstruído a partir dos scripts preservados no Git.
 
-Para colocar apenas o banco no estado inicial antes de uma demonstração:
+O acionamento manual em Actions permite reaplicar a main. Isso executa somente versões ainda não registradas, além do exercício anterior quando solicitado pelo fluxo manual.
 
-```bash
-bash demo.sh inicio
-bash demo.sh consultar
-```
+## Exercício anterior de consultas
 
-Esse comando não muda o arquivo versionado nem faz push. Para retornar à consulta corrigida, use `bash demo.sh aplicar` ou execute manualmente o workflow da main. Um novo merge com alteração SQL também aplica a versão correspondente.
+O relatório `ws4.resumo_clientes` e `sql/estado-demonstracao.txt` preservam a investigação do Workshop 4. No estado inicial, o contrato deve falhar por ausência de Bruno e Carla. No corrigido, os dois cenários devem passar. O teste de reprodução da falha não equivale à aprovação do contrato de negócio.
 
-## Disponibilidade
-
-Docker Desktop, PostgreSQL e o executor precisam estar ligados. O executor não expõe porta, não monta o socket Docker e só recebe a configuração do banco didático. Os testes de PR continuam nos executores hospedados pelo GitHub, sem executar código de branches no executor de aplicação.
-
-O banco atual usa armazenamento temporário: a automação o preserva, mas encerrar ou recriar o contêiner do PostgreSQL descarta os dados. O pgAdmin mantém sua configuração. Consulte [instalação e credenciais](../README.md) e [configuração do executor](../infra/runner/README.md).
-
-Referências: [eventos de workflow](https://docs.github.com/en/actions/reference/workflows-and-actions/events-that-trigger-workflows) e [executores próprios](https://docs.github.com/en/actions/how-tos/manage-runners/self-hosted-runners/use-in-a-workflow).
-
-## Validação isolada da automação
-
-Com a imagem do executor preparada, execute `bash scripts/validar-aplicacao.sh`. O comando usa outro banco e testa retorno inicial, aplicação correta, rollback da consulta inválida, bloqueio de um SQL diferente do original no modo inicial e preservação dos dados. O banco da apresentação não é alterado.
+A correção e o retorno estão registrados nos PRs nº 1 e nº 2. Para novas consultas e releases, use o catálogo numerado. A [arquitetura](arquitetura-automacao.md) e os [registros de validação](validacao/) explicam a implementação e o histórico.

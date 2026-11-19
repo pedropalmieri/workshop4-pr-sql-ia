@@ -1,0 +1,27 @@
+{
+  "descricao": "Converte apenas valores sem fração",
+  "verificacoes": [
+    {
+      "sql": "SELECT data_type FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='metricas' AND column_name='quantidade'",
+      "esperado": [
+        {
+          "data_type": "integer"
+        }
+      ]
+    },
+    {
+      "sql": "SELECT id,quantidade FROM ws4_demo.metricas ORDER BY id",
+      "esperado": [
+        {
+          "id": 1,
+          "quantidade": 12
+        },
+        {
+          "id": 2,
+          "quantidade": 5
+        }
+      ],
+      "ordenado": true
+    }
+  ]
+}
