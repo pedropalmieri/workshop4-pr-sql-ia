@@ -12,7 +12,7 @@ Relacionar uma alteração SQL versionada ao resultado aplicado no PostgreSQL do
 | Validação do PR | `.github/workflows/testes.yml` | Testar a proposta em banco temporário do GitHub, separado do laboratório |
 | Aplicação após merge | `.github/workflows/aplicar-main.yml` | Aplicar o commit mesclado, apenas após PR SQL efetivamente incorporado à main |
 | Executor do banco | `infra/runner/Dockerfile` e contêiner `ws4-actions-runner` | Conectar ao banco local pela rede Docker, sem expor o PostgreSQL à internet |
-| Aplicação transacional | `scripts/aplicar-no-banco.sh` | Confirmar a alteração e sua validação juntas, ou desfazer a tentativa |
+| Aplicação transacional | `scripts/versoes_sql.py`; `scripts/aplicar-no-banco.sh` no exercício anterior | Confirmar o lote de cada mecanismo e sua validação juntos, ou desfazer a tentativa |
 | Estado do exercício | `sql/estado-demonstracao.txt` | Distinguir explicitamente a reprodução da falha e a solução correta |
 | Diagnóstico do estado inicial | `sql/04_testes_estado_inicial.sql` | Conferir o defeito conhecido sem flexibilizar o contrato de negócio |
 | Teste do contrato | `sql/03_testes.sql` | Verificar os quatro clientes e o cenário sem pagamentos |
@@ -24,8 +24,8 @@ Relacionar uma alteração SQL versionada ao resultado aplicado no PostgreSQL do
 2. O PR executa **Testes SQL**. No estado corrigido, exige o contrato. No inicial, confere a versão original e confirma que o contrato continua falhando.
 3. Após o merge de um PR da develop para a main com alteração em `sql/` ou `consultas/`, o workflow de aplicação seleciona o commit do merge. Fechamento sem merge ou push direto não aciona a aplicação.
 4. O executor em Docker usa o cliente PostgreSQL para acessar `db` pela rede do laboratório. Os jobs de PR não usam esse executor.
-5. O script exibe o resultado anterior, abre uma transação, serializa a aplicação por uma trava, aplica o SQL, executa os testes do estado e grava o identificador da execução.
-6. Uma falha aborta a transação. No sucesso, a consulta e seu metadado ficam aplicados, e o log mostra o resultado posterior.
+5. O catálogo abre uma transação, serializa a aplicação por uma trava, executa apenas as versões pendentes, testa seus contratos e revalida as consultas vigentes. Registra arquivo, hash, commit e execução. O exercício em `sql/` usa outro mecanismo transacional, que também registra antes/depois e testa o estado declarado.
+6. Uma falha aborta o lote do mecanismo em execução. No sucesso, suas mudanças e metadados são confirmados. O catálogo e o exercício anterior têm transações separadas.
 7. O pgAdmin consulta o mesmo banco. Uma nova execução do SELECT mostra a versão aplicada.
 
 ## Decisões de implementação

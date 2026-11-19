@@ -1,0 +1,21 @@
+{
+  "descricao": "05_Alter_Test_Table",
+  "verificacoes": [
+    {
+      "sql": "SELECT column_name, data_type, character_maximum_length FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='teste_deploy' AND column_name IN ('descricao','observacao') ORDER BY column_name;",
+      "esperado": [
+        {
+          "column_name": "descricao",
+          "data_type": "character varying",
+          "character_maximum_length": 120
+        },
+        {
+          "column_name": "observacao",
+          "data_type": "text",
+          "character_maximum_length": null
+        }
+      ],
+      "ordenado": true
+    }
+  ]
+}
