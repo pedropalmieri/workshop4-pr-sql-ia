@@ -25,7 +25,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | Exemplos numerados para executar no pgAdmin | [Sequência de demonstração](exemplos/demonstracao/README.md) |
 | Análise do problema e da solução | [SQL comentado](docs/sql-comentado.md) |
 | Aplicação da main no banco após o merge | [Fluxo de aplicação e consulta do resultado](docs/aplicacao-main.md) |
-| Validação e revisão | [Laboratório de Pull Request](docs/laboratorio-pr.md) |
+| Onde editar o SQL e como abrir o PR, etapa por etapa | [Da consulta ao Pull Request](docs/laboratorio-pr.md) |
 | Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
 | IA como tutora: prompts para qualquer assistente | [Contexto único e prompts curtos](prompts/README.md) e [guia de uso](docs/prompts-tutora.md) |
 | Ferramenta e momento de uso da IA | [Orientações de uso da IA](docs/uso-da-ia.md) |

@@ -270,6 +270,8 @@ Registre a tarefa delegada, o motivo da ajuda, a orientação realmente recebida
 
 ## 13. Como levar a correção ao Pull Request e ao banco?
 
+O [guia da consulta ao Pull Request](laboratorio-pr.md) detalha onde editar, testar, publicar a branch e abrir o PR.
+
 1. Altere a lógica de leitura em `sql/02_consulta.sql`, preservando a estrutura do arquivo.
 2. Declare `corrigido` em `sql/estado-demonstracao.txt` no mesmo PR.
 3. Aplique o arquivo e confira os resultados e os testes:

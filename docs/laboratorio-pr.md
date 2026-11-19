@@ -1,100 +1,216 @@
-# Laboratório: validação e revisão de uma consulta
+# Da consulta SQL ao Pull Request
 
-O PR nº 1 já foi mesclado e registra a correção. O estado atual do exercício está em `sql/estado-demonstracao.txt`. O fluxo abaixo documenta a correção e serve de referência para novas alterações. A reprodução da falha usa `bash demo.sh inicio`, sem modificar o arquivo versionado. Quando o estado estiver `inicial`, uma nova correção precisa mudar o SQL e declarar `corrigido` no mesmo PR.
+Este guia mostra onde executar a consulta, qual arquivo alterar e como enviar a correção de uma branch para a `main`. O acesso ao repositório privado é necessário. Os comandos usam Bash na raiz do clone.
 
-O fluxo registra uma mudança de SQL, suas evidências e a justificativa das decisões. Os comandos usam Bash e partem da raiz do repositório.
+## 1. O que fica em cada lugar?
 
-## 1. Branch de trabalho
+| Lugar | O que fazer | O que essa ação registra |
+|---|---|---|
+| pgAdmin, no Query Tool | Executar SELECTs e analisar os resultados | A execução no banco; não salva a alteração no Git |
+| Editor de texto, no clone local | Alterar `sql/02_consulta.sql` | O arquivo que contém a implementação em revisão |
+| Editor, no clone local | Definir `corrigido` em `sql/estado-demonstracao.txt` | O estado que os testes do PR devem exigir |
+| Pasta `docs/` no clone | Salvar a evidência e o registro real de uso da IA | A justificativa e a validação da mudança |
+| Terminal, na branch | Fazer commit e push | A versão local e seu envio ao GitHub |
+| GitHub, no Pull Request | Comparar a branch de trabalho com a `main` | O diff, os checks, a discussão e o merge |
 
-Com a árvore de trabalho limpa:
+**O SELECT não é publicado diretamente no PR.** Primeiro você salva a alteração no arquivo da branch, faz commit e push. O PR apresenta essa diferença para revisão.
+
+## 2. Cada consulta de exploração precisa de um PR?
+
+Não. As consultas de [exemplos/demonstracao](../exemplos/demonstracao/README.md) e de [respostas às questões](../exemplos/respostas-questoes-slides.sql) servem para explorar dados e compreender o problema no pgAdmin.
+
+Neste caso, o PR reúne a correção do relatório, a declaração do estado corrigido e suas evidências. Não é necessário abrir um PR para cada SELECT executado durante a investigação.
+
+## 3. De onde começar?
+
+Confira o [contrato](contrato.md) e o [estado declarado](../sql/estado-demonstracao.txt). O retorno inicial foi registrado no [PR nº 2](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/2). Quando o estado estiver `inicial`, a nova correção deve alterar o SQL e declarar `corrigido` no mesmo PR.
+
+Se a `main` já estiver corrigida, a mesma correção não produzirá um novo diff útil. Use o histórico para comparar as versões; um novo PR deve conter uma alteração ainda não incorporada.
+
+## 4. Criar a branch antes de editar os arquivos
+
+No terminal, entre na pasta clonada e confira se não há alterações próprias pendentes:
 
 ```bash
 git status --short --branch
 git switch main
 git pull --ff-only
-git switch -c exercicio/clientes-sem-pagamento
+git switch -c exercicio/corrigir-relatorio-pagos
 ```
 
-Use um nome diferente se a branch já existir. Preserve alterações próprias antes de trocar de branch.
+Se esse nome de branch já existir, escolha outro. Preserve as alterações próprias antes de trocar de branch. A partir daqui, os arquivos editados pertencem à branch `exercicio/corrigir-relatorio-pagos`, não à `main`.
 
-## 2. Reprodução do problema
+## 5. Observar o problema no pgAdmin
 
-O resultado da consulta também pode ser acompanhado no pgAdmin. O terminal abaixo aplica a versão do arquivo e executa a validação.
+Com a base carregada, abra o Query Tool do banco `workshop`. Execute o conteúdo de [consulta-inicial.sql](../exemplos/consulta-inicial.sql). O resultado mostra apenas Ana e Diego, enquanto o requisito inclui também Bruno e Carla.
+
+Use as consultas de exploração para identificar a causa. A [biblioteca de prompts](../prompts/README.md) permite pedir uma explicação à IA Tutora, sem delegar a implementação.
+
+Para conferir a versão aplicada e reproduzir a falha pelo terminal:
 
 ```bash
-bash demo.sh subir
-bash demo.sh conexao
-bash demo.sh base
-bash demo.sh inicio
 bash demo.sh consultar
 bash demo.sh testar
 ```
 
-Na implementação inicial aplicada por `inicio`, o teste falha porque há clientes ausentes. Compare `exemplos/consulta-com-erro.sql` com a correção atual de `sql/02_consulta.sql` e o [contrato](contrato.md). Para corrigir a versão inicial, altere o SQL e grave `corrigido` em `sql/estado-demonstracao.txt`. Novos PRs devem conter alterações ainda não incorporadas à main.
+No estado inicial, o teste deve falhar por resultado diferente do contrato. Uma falha de conexão não corresponde a esse defeito.
 
-## 3. Validação e evidência
+## 6. Onde salvar a correção do SELECT?
+
+**No editor, abra `sql/02_consulta.sql` dentro do clone.** Esse é o arquivo que o teste e a automação aplicam. Não basta alterar um SELECT no Query Tool ou salvar apenas uma cópia na pasta `exemplos/`.
+
+A condição de status deve participar do ON. Remova o filtro de status do WHERE. O trecho SELECT do arquivo deve ficar assim:
+
+```sql
+SELECT c.id, c.nome,
+       COUNT(p.id) AS pedidos_pagos,
+       COALESCE(SUM(p.valor), 0)::numeric(12,2) AS total_pago
+FROM ws4.clientes c
+LEFT JOIN ws4.pedidos p
+  ON p.cliente_id = c.id AND p.status = 'pago'
+GROUP BY c.id, c.nome;
+```
+
+Preserve a estrutura restante do arquivo e atualize os comentários para descrever o comportamento corrigido. A [solução de referência](../solucao/02_consulta.sql) permite comparar a implementação completa.
+
+**Abra também `sql/estado-demonstracao.txt` e deixe seu conteúdo como:**
+
+```text
+corrigido
+```
+
+Salve os dois arquivos. Não altere os valores esperados dos testes para aceitar um resultado errado.
+
+## 7. Aplicar o arquivo local e testar antes do commit
+
+No terminal, na mesma branch:
 
 ```bash
 bash demo.sh aplicar
 bash demo.sh consultar
 bash demo.sh testar
-bash scripts/registrar-evidencia.sh
-cp docs/registro-ia-modelo.md docs/registro-ia.md
+bash scripts/testar-estado.sh
 ```
 
-O arquivo gerado contém a definição efetivamente aplicada no banco e as saídas dos testes. Preencha o registro com as interações reais com IA: tarefa, justificativa, orientação, decisão, evidência e retrabalho. O [exemplo ilustrativo](registro-ia-exemplo.md) mostra o formato e não representa uma conversa real.
+`aplicar` usa o arquivo que você acabou de salvar. `consultar` mostra a implementação aplicada. Os testes precisam aprovar os quatro clientes e o cenário sem pagamentos.
 
-## 4. Commit e envio
+| Cliente | Pedidos pagos | Total pago |
+|---|---|---|
+| Ana | 2 | 150.00 |
+| Bruno | 0 | 0.00 |
+| Carla | 0 | 0.00 |
+| Diego | 1 | 0.00 |
+
+No pgAdmin, execute novamente a consulta abaixo para atualizar o resultado exibido:
+
+```sql
+SELECT id, nome, pedidos_pagos, total_pago
+FROM ws4.resumo_clientes
+ORDER BY id;
+```
+
+A execução local ajuda a validar antes do PR. Depois do merge, o workflow executará novamente a aplicação do commit incorporado à `main`.
+
+## 8. Salvar a evidência e as decisões
+
+Gere uma evidência real:
 
 ```bash
-git diff -- sql/02_consulta.sql
+bash scripts/registrar-evidencia.sh docs/evidencias-correcao-relatorio.txt
+```
+
+Se esse arquivo já existir, escolha outro nome para preservar o registro anterior e use o novo caminho também no `git add`. O script não sobrescreve evidências existentes. Sua saída deve indicar sucesso dos testes.
+
+Crie `docs/registro-ia.md` a partir do [modelo de registro](registro-ia-modelo.md), preenchendo a interação, a decisão e a validação reais. Se o arquivo já existir, preserve os registros e acrescente a nova interação. Não invente respostas ou sugestões para completar campos.
+
+A evidência registra o estado local testado, incluindo alterações ainda não commitadas. O PR reunirá esse arquivo com a versão final do SQL.
+
+## 9. Fazer commit dos arquivos certos
+
+Confira o diff e os arquivos modificados:
+
+```bash
+git diff -- sql/02_consulta.sql sql/estado-demonstracao.txt
 git status --short
-git add sql/02_consulta.sql sql/estado-demonstracao.txt docs/registro-ia.md
 ```
 
-Inclua também a evidência usando `git add` seguido do caminho exato impresso pelo script. Confira o conteúdo antes de confirmar:
+Inclua os arquivos da alteração e suas evidências:
 
 ```bash
+git add sql/02_consulta.sql sql/estado-demonstracao.txt docs/registro-ia.md docs/evidencias-correcao-relatorio.txt
 git diff --cached
-git commit -m "Inclui clientes sem pedidos pagos no relatorio"
-git push -u origin HEAD
+git commit -m "Corrige relatorio para incluir clientes sem pedidos pagos"
 ```
 
-## 5. Pull Request
+Se você usou outro nome para a evidência, substitua o caminho no comando. O `git diff --cached` permite verificar exatamente o que entrará no commit.
 
-No GitHub, abra um PR com base `main` e compare a branch de trabalho. O template reúne requisito, alteração, testes e uso da IA.
+## 10. Publicar a branch no GitHub
 
-Uma descrição deve explicar o problema concreto e o resultado da mudança. Exemplo:
+```bash
+git push -u origin exercicio/corrigir-relatorio-pagos
+```
 
-> O relatório omitia clientes sem pedidos pagos. O filtro de status agora faz parte da condição ON do LEFT JOIN. Os testes comparam o resultado com o contrato e cobrem um cenário sem pagamentos. As evidências da execução acompanham a alteração.
+Se escolheu outro nome de branch, use esse nome. O push envia a branch e seus commits. Ele ainda não incorpora a alteração à `main`.
 
-O check automatizado executa os testes em um PostgreSQL novo no Docker. A aprovação comprova os cenários definidos, sem substituir a revisão do requisito.
+## 11. Abrir o Pull Request da branch para a main
 
-## 6. Revisão e ajustes
+No repositório do GitHub, abra **Pull requests > New pull request** e selecione:
 
-Questões para revisão:
+| Campo | Valor | Significado |
+|---|---|---|
+| base | `main` | Destino que receberá a mudança |
+| compare | `exercicio/corrigir-relatorio-pagos` | Origem dos commits enviados |
 
-- Qual teste garante a presença de clientes com apenas pedidos cancelados?
-- COUNT(p.id) e COUNT(*) produziriam os mesmos resultados?
-- O total zero de Diego preserva a contagem de seu pedido?
-- A evidência corresponde à definição de consulta aplicada?
-- As decisões com IA estão justificadas por resultados observáveis?
+Confira o diff, preencha a descrição e crie o PR. A descrição precisa explicar o problema, a alteração, os testes executados e o registro de IA.
 
-Após um pedido de ajuste, altere o arquivo correspondente, valide novamente quando necessário e envie outro commit na mesma branch. O PR recebe a atualização. O merge depende da revisão e das regras do repositório.
+Exemplo de descrição da mudança:
 
-O [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) apresenta uma solução de referência com evidência e check automatizado.
+> O relatório omitia clientes sem pedidos pagos. O filtro de status passou do WHERE para o ON do LEFT JOIN. A mudança preserva todos os clientes. O PR inclui a declaração do estado corrigido, a evidência dos testes e o registro real das decisões com IA.
 
-## 7. Aplicação após o merge
+A frase sobre evidências deve corresponder aos arquivos realmente incluídos no PR. Os checks **Testes SQL** precisam passar antes do merge. Eles validam a proposta em banco temporário, sem aplicar a branch ao banco da demonstração.
 
-Após o merge com alteração SQL na `main`, o workflow de aplicação atualiza o PostgreSQL da demonstração, testa a consulta e preserva os dados. A aprovação do PR sozinha não dispara essa aplicação. Confira o resultado no log e execute novamente o SELECT no pgAdmin. Se o teste falhar, a aplicação é desfeita e o banco mantém a consulta anterior. Veja [aplicação da main no banco](aplicacao-main.md).
+## 12. Como enviar um ajuste pedido na revisão?
 
-## Branch e estado do banco
+Continue na mesma branch. Edite o arquivo, aplique e teste novamente se mudou o SQL. Registre a nova evidência e envie outro commit:
 
-Trocar de branch altera os arquivos, mas não reaplica a consulta no PostgreSQL:
+```bash
+git status --short
+git diff -- sql/02_consulta.sql sql/estado-demonstracao.txt
+```
+
+Depois de adicionar os arquivos ajustados e fazer o novo commit:
+
+```bash
+git push
+```
+
+O PR existente recebe os novos commits. Não é necessário abrir outro PR para cada ajuste da mesma correção.
+
+## 13. O que acontece depois do merge?
+
+Após revisão e merge de um PR para a `main` com mudança em `sql/`, o workflow **Aplicar main no banco de demonstracao** aplica o commit mesclado no banco existente. A aprovação do PR, sozinha, não executa o SQL.
+
+Confira a execução em **Actions**. No sucesso, execute novamente o SELECT do relatório no pgAdmin e consulte o identificador da aplicação:
+
+```sql
+SELECT obj_description('ws4.resumo_clientes'::regclass) AS ultima_aplicacao;
+```
+
+Se a validação da aplicação falhar, a transação é desfeita e o banco mantém a versão anterior. O [guia de aplicação](aplicacao-main.md) detalha a disponibilidade do executor e os estados do exercício.
+
+Atualize seu clone depois do merge:
 
 ```bash
 git switch main
-bash demo.sh aplicar
+git pull --ff-only
 ```
 
-O acesso ao repositório privado é necessário para clone e envio de alterações. A discussão durante o workshop não exige entrega própria.
+Trocar de branch ou executar `git pull` atualiza arquivos, não reaplica automaticamente o SQL local. A execução no banco vem de `bash demo.sh aplicar` ou do workflow configurado após o merge.
+
+## Resumo do caminho da alteração
+
+**pgAdmin:** explorar e observar. **Editor:** salvar a correção em `sql/02_consulta.sql` e declarar `corrigido`. **Terminal:** aplicar, testar, registrar, fazer commit e push. **GitHub:** abrir o PR da branch para a `main`, revisar e fazer merge. **Workflow:** aplicar o commit no banco e registrar o resultado.
+
+O [PR nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) preserva a correção anterior. O workshop não exige uma entrega adicional; este guia documenta como realizar a alteração do caso.
+
+Referência: [criar um Pull Request no GitHub](https://docs.github.com/en/pull-requests/collaborating-with-pull-requests/proposing-changes-to-your-work-with-pull-requests/creating-a-pull-request).
