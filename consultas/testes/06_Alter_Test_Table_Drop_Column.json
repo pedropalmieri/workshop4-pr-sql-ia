@@ -1,0 +1,32 @@
+{
+  "descricao": "06_Alter_Test_Table_Drop_Column",
+  "verificacoes": [
+    {
+      "sql": "SELECT column_name FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='teste_deploy' ORDER BY ordinal_position;",
+      "esperado": [
+        {
+          "column_name": "id"
+        },
+        {
+          "column_name": "descricao"
+        },
+        {
+          "column_name": "created_at"
+        },
+        {
+          "column_name": "active"
+        }
+      ],
+      "ordenado": true
+    },
+    {
+      "sql": "SELECT count(*) AS total FROM ws4_demo.teste_deploy;",
+      "esperado": [
+        {
+          "total": 0
+        }
+      ],
+      "ordenado": true
+    }
+  ]
+}
