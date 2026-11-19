@@ -20,7 +20,7 @@ O nome segue `NN_Operacao_Objeto.sql`, como `03_Select_Client_Report.sql`. Use o
 
 Cada script possui um teste JSON com o mesmo nome em `testes/`. Para SELECT, o teste declara as linhas esperadas, calculadas independentemente. Para DDL, declara consultas de inspeção e a estrutura esperada. A pasta `testes/` oferece modelos reais desse formato.
 
-Não edite, remova ou renomeie scripts e testes já incorporados à main. Para corrigir uma consulta, crie a próxima versão. O workflow compara o conteúdo com a main e com a versão anterior da develop. O banco também confere o hash das versões já executadas.
+Não edite, remova ou renomeie scripts e testes já incorporados à main. Para corrigir uma consulta, crie a próxima versão. O workflow compara o conteúdo com a main. Uma versão ainda não publicada pode receber correções na develop e no mesmo PR; versões já publicadas permanecem imutáveis. O banco também confere o hash das versões já executadas.
 
 Os nomes seguem número, operação e objeto, como `01_Select_Clients.sql` e `02_Alter_Clients.sql`. O número é global no catálogo. Operações: Select, Create, Alter e Drop.
 

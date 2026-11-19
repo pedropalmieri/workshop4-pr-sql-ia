@@ -75,13 +75,12 @@ jobs:
           bash demo.sh inicio
       - name: Validar catálogo, sintaxe, resultados e histórico
         env:
-          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+          BASE_REF: ${{ github.event.pull_request.base.sha }}
         run: |
-          if [ -n "$BASE_REF" ]; then
-            docker compose -p "$WS4_PROJECT" --profile validacao run --rm -e GITHUB_SHA -e GITHUB_RUN_ID validador python scripts/versoes_sql.py validar --base "$BASE_REF"
-          else
-            docker compose -p "$WS4_PROJECT" --profile validacao run --rm -e GITHUB_SHA -e GITHUB_RUN_ID validador
+          if [ -z "$BASE_REF" ]; then
+            BASE_REF="$(git rev-parse origin/main)"
           fi
+          docker compose -p "$WS4_PROJECT" --profile validacao run --rm -e GITHUB_SHA -e GITHUB_RUN_ID validador python scripts/versoes_sql.py validar --base "$BASE_REF"
       - name: Testar modelos e rejeições
         run: docker compose -p "$WS4_PROJECT" --profile validacao run --rm -e WS4_TESTDB=1 validador python -m unittest discover -s tests -v
       - name: Encerrar banco isolado
