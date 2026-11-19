@@ -191,3 +191,7 @@ Cada pessoa usa sua própria conta. O [processo de deploy BD](docs/processo-rele
 ## Tags e releases
 
 Após a confirmação no banco, a automação publica tags anotadas `bd-vNNNN` e releases no GitHub, apontando para o commit registrado em cada versão. Veja [como conferir a release e seu commit](docs/tags-e-releases.md).
+
+## Ciclo adicional de validação DDL
+
+As versões 09 a 12 mostram criação, adição e remoção de coluna e exclusão de tabela descartável, com testes e um PR por etapa. Consulte [os estados e as evidências](docs/validacao/ciclo-ddl-20261119.md).
