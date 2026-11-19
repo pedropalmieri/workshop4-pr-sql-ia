@@ -1,0 +1,36 @@
+{
+  "descricao": "11_Alter_Validation_Table_Drop_Column",
+  "verificacoes": [
+    {
+      "sql": "SELECT column_name FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='validacao_release' ORDER BY ordinal_position;",
+      "esperado": [
+        {
+          "column_name": "id"
+        },
+        {
+          "column_name": "descricao"
+        },
+        {
+          "column_name": "active"
+        }
+      ],
+      "ordenado": true
+    },
+    {
+      "sql": "SELECT id,descricao,active FROM ws4_demo.validacao_release ORDER BY id;",
+      "esperado": [
+        {
+          "id": 1,
+          "descricao": "Primeira amostra",
+          "active": true
+        },
+        {
+          "id": 2,
+          "descricao": "Segunda amostra",
+          "active": true
+        }
+      ],
+      "ordenado": true
+    }
+  ]
+}
