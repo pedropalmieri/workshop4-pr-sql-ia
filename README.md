@@ -21,6 +21,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | Tema | Material |
 |---|---|
 | Caso completo, com enunciado, perguntas e resolução | [Estudo de caso passo a passo](docs/estudo-de-caso.md) |
+| Validação real de criação, alteração e remoção de coluna | [PRs, workflows e conferência no banco](docs/validacao/deploy-bd-20261119.md) |
 | Padrão dos novos scripts SQL e modelos ALTER TABLE | [Catálogo versionado](consultas/README.md) |
 | Fluxo develop, validação e publicação na main | [Guia do fluxo](docs/fluxo-develop-main.md) |
 | Apresentação | [Slides](materiais/Workshop4-19nov2026.pptx) |
@@ -33,7 +34,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 | Exemplos numerados para executar no pgAdmin | [Sequência de demonstração](exemplos/demonstracao/README.md) |
 | Análise do problema e da solução | [SQL comentado](docs/sql-comentado.md) |
 | Aplicação da main no banco após o merge | [Fluxo de aplicação e consulta do resultado](docs/aplicacao-main.md) |
-| Análise do exercício anterior e sua correção | [Da consulta ao Pull Request](docs/laboratorio-pr.md) |
+| Publicar a consulta do caso sem sobrescrever versões | [Da consulta ao Pull Request](docs/laboratorio-pr.md) |
 | Discussão em grupo | [Questões sobre a consulta](docs/atividade-da-turma.md) |
 | IA como tutora: prompts para qualquer assistente | [Contexto único e prompts curtos](prompts/README.md) e [guia de uso](docs/prompts-tutora.md) |
 | Ferramenta e momento de uso da IA | [Orientações de uso da IA](docs/uso-da-ia.md) |
@@ -44,7 +45,7 @@ O [contrato da consulta](docs/contrato.md) define o resultado esperado. A versã
 
 O trabalho relaciona uma consulta `SELECT`, seus testes e a revisão por Pull Request. A IA atua como Tutora, e o Fellow implementa, executa e registra a validação.
 
-- **Consulta e PR:** a alteração está na lógica de leitura do relatório, no arquivo `sql/02_consulta.sql`. Ela muda o resultado calculado, preservando os registros de clientes e pedidos.
+- **Consulta e PR:** novas versões ficam em `consultas/NN_Select_Objeto.sql`, com seu teste JSON. A lógica muda o resultado calculado e preserva os registros de clientes e pedidos. O arquivo `sql/02_consulta.sql` preserva a implementação do primeiro exercício.
 - **Preparação da base:** `sql/01_base.sql` cria e carrega os dados fictícios do exercício. A carga estabelece os quatro clientes e os cinco pedidos usados no contrato.
 - **UPDATE no teste:** `sql/03_testes.sql` cancela temporariamente os pedidos para verificar o cenário sem pagamentos. O `ROLLBACK` desfaz a alteração e mantém os dados originais.
 - **Exclusão de dados:** a análise do relatório não usa `DELETE`.

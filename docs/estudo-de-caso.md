@@ -272,20 +272,13 @@ Registre a tarefa delegada, o motivo da ajuda, a orientação realmente recebida
 
 O [guia da consulta ao Pull Request](laboratorio-pr.md) detalha onde editar, testar, publicar a branch e abrir o PR.
 
-1. Altere a lógica de leitura em `sql/02_consulta.sql`, preservando a estrutura do arquivo.
-2. Declare `corrigido` em `sql/estado-demonstracao.txt` no mesmo PR.
-3. Aplique o arquivo e confira os resultados e os testes:
-
-   ```bash
-   bash demo.sh aplicar
-   bash demo.sh consultar
-   bash demo.sh testar
-   ```
-
-4. Registre a evidência e as decisões reais com IA. Examine o diff e envie os commits da branch.
-5. Abra o PR para a `main`. Explique o requisito, a causa da falha, a alteração e a validação. Os checks verificam a proposta em um banco temporário.
-6. Após revisão e merge de um PR com alteração em `sql/`, o workflow do laboratório aplica o commit no banco de demonstração. A aplicação só confirma a mudança se os testes do estado declarado passarem; uma falha desfaz a tentativa.
-7. Execute novamente o SELECT da seção 11 no pgAdmin e confira o log do workflow. Aprovar o PR, sem fazer o merge, não executa o SQL no banco.
+1. Atualize a develop e confira o próximo número livre em `consultas/`.
+2. Crie um novo `NN_Select_Client_Report.sql` e seu teste JSON de mesmo nome em `consultas/testes/`. Preserve os arquivos anteriores.
+3. Valide a consulta e o resultado esperado no banco isolado, conforme os [comandos do catálogo](../consultas/README.md#validar-localmente-com-docker).
+4. Registre as evidências e decisões reais com IA. Faça commit e push na develop e confira os quatro checks.
+5. Abra o PR de develop para main. Explique requisito, causa, alteração e validação. Aguarde os checks na versão final.
+6. Após revisão e merge, o workflow executa as versões pendentes e registra o resultado e o commit no banco. Uma falha desfaz o lote novo.
+7. Execute o novo arquivo SELECT no pgAdmin e confira `ws4_controle.versoes`. Publicar um SELECT não altera os dados nem substitui automaticamente outro relatório. Aprovar sem fazer merge não executa o SQL.
 
 Os [PRs nº 1](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/1) e [nº 2](https://github.com/pedropalmieri/workshop4-pr-sql-ia/pull/2) preservam a correção e o retorno inicial. O [guia de aplicação](aplicacao-main.md) explica os estados, a execução e a rastreabilidade.
 
