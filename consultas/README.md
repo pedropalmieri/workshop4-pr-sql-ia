@@ -95,3 +95,7 @@ O workflow valida as regras implementadas e o resultado esperado fornecido. Isso
 ## Compatibilidade entre esquema e consultas
 
 No final do lote, o validador reexecuta as consultas vigentes. Por padrão, cada SELECT é um contrato independente. Para publicar uma nova implementação do mesmo relatório, os dois testes devem declarar o mesmo campo `contrato`; a maior versão é a vigente. O arquivo antigo permanece no histórico. Leia o [caso completo de alteração de coluna](../docs/alteracao-coluna-e-rastreabilidade.md). Uma mudança manual fora do fluxo exige auditoria do PostgreSQL para identificar o autor; o Git não registra comandos externos automaticamente.
+
+## Tags e releases
+
+Após a confirmação no banco, a automação publica tags anotadas `bd-vNNNN` e releases no GitHub, apontando para o commit registrado em cada versão. Veja [como conferir a release e seu commit](../docs/tags-e-releases.md).

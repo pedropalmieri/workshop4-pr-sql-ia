@@ -8,7 +8,7 @@ on:
       - consultas/**
   workflow_dispatch:
 permissions:
-  contents: read
+  contents: write
   checks: read
   actions: read
 concurrency:
@@ -48,3 +48,7 @@ jobs:
         run: bash scripts/aplicar-no-banco.sh
       - name: Publicar novos scripts SQL e registrar resultados
         run: /opt/ws4/bin/python scripts/versoes_sql.py aplicar
+      - name: Criar tags e releases das versões aplicadas
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: /opt/ws4/bin/python scripts/publicar-releases.py
