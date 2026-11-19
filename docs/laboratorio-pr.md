@@ -1,6 +1,6 @@
-# Da consulta SQL ao Pull Request
+# Correção da consulta do caso
 
-Este guia mostra onde executar a consulta, qual arquivo alterar e como enviar a correção de uma branch para a `main`. O acesso ao repositório privado é necessário. Os comandos usam Bash na raiz do clone.
+O fluxo atual para criar e publicar scripts está em [develop, PR e main](fluxo-develop-main.md), usando a pasta `consultas/`. Esta página explica a correção do relatório do caso e suas evidências. Os comandos usam Bash na raiz do clone.
 
 ## 1. O que fica em cada lugar?
 
@@ -33,12 +33,11 @@ No terminal, entre na pasta clonada e confira se não há alterações próprias
 
 ```bash
 git status --short --branch
-git switch main
+git switch develop
 git pull --ff-only
-git switch -c exercicio/corrigir-relatorio-pagos
 ```
 
-Se esse nome de branch já existir, escolha outro. Preserve as alterações próprias antes de trocar de branch. A partir daqui, os arquivos editados pertencem à branch `exercicio/corrigir-relatorio-pagos`, não à `main`.
+Preserve alterações próprias antes de trocar de branch. Trabalhe na develop e use o fluxo de promoção para a main.
 
 ## 5. Observar o problema no pgAdmin
 
@@ -147,10 +146,10 @@ Se você usou outro nome para a evidência, substitua o caminho no comando. O `g
 ## 10. Publicar a branch no GitHub
 
 ```bash
-git push -u origin exercicio/corrigir-relatorio-pagos
+git push origin develop
 ```
 
-Se escolheu outro nome de branch, use esse nome. O push envia a branch e seus commits. Ele ainda não incorpora a alteração à `main`.
+O push envia a develop e seus commits. Ele ainda não incorpora a alteração à `main`.
 
 ## 11. Abrir o Pull Request da branch para a main
 
@@ -159,7 +158,7 @@ No repositório do GitHub, abra **Pull requests > New pull request** e selecione
 | Campo | Valor | Significado |
 |---|---|---|
 | base | `main` | Destino que receberá a mudança |
-| compare | `exercicio/corrigir-relatorio-pagos` | Origem dos commits enviados |
+| compare | `develop` | Origem dos commits enviados |
 
 Confira o diff, preencha a descrição e crie o PR. A descrição precisa explicar o problema, a alteração, os testes executados e o registro de IA.
 

@@ -1,0 +1,14 @@
+{
+  "descricao": "05_Create_Clients",
+  "verificacoes": [
+    {
+      "sql": "SELECT column_name, data_type FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='clients' AND column_name='description';",
+      "esperado": [
+        {
+          "column_name": "description",
+          "data_type": "text"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "descricao": "06_Alter_Test_Table_Column_Type",
+  "verificacoes": [
+    {
+      "sql": "SELECT data_type, character_maximum_length AS tamanho FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='execucoes' AND column_name='descricao';",
+      "esperado": [
+        {
+          "data_type": "character varying",
+          "tamanho": 120
+        }
+      ]
+    }
+  ]
+}

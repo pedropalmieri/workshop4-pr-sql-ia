@@ -1,0 +1,36 @@
+{
+  "descricao": "Cinco pedidos da base",
+  "resultado": [
+    {
+      "id": 101,
+      "cliente_id": 1,
+      "status": "pago",
+      "valor": 100
+    },
+    {
+      "id": 102,
+      "cliente_id": 1,
+      "status": "pago",
+      "valor": 50
+    },
+    {
+      "id": 103,
+      "cliente_id": 1,
+      "status": "cancelado",
+      "valor": 900
+    },
+    {
+      "id": 104,
+      "cliente_id": 2,
+      "status": "cancelado",
+      "valor": 80
+    },
+    {
+      "id": 105,
+      "cliente_id": 4,
+      "status": "pago",
+      "valor": 0
+    }
+  ],
+  "ordenado": true
+}

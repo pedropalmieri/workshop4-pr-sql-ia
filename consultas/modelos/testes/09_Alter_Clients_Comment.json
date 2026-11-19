@@ -1,0 +1,14 @@
+{
+  "descricao": "09_Alter_Clients_Comment",
+  "verificacoes": [
+    {
+      "sql": "SELECT column_name, data_type FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='clients' AND column_name='name';",
+      "esperado": [
+        {
+          "column_name": "name",
+          "data_type": "text"
+        }
+      ]
+    }
+  ]
+}

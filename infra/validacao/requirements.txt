@@ -1,0 +1,2 @@
+pglast==7.23
+psycopg[binary]==3.2.13

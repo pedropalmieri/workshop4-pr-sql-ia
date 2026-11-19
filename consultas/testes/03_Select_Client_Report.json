@@ -1,0 +1,30 @@
+{
+  "descricao": "Contrato do relatório de pagamentos",
+  "resultado": [
+    {
+      "id": 1,
+      "nome": "Ana",
+      "pedidos_pagos": 2,
+      "total_pago": 150
+    },
+    {
+      "id": 2,
+      "nome": "Bruno",
+      "pedidos_pagos": 0,
+      "total_pago": 0
+    },
+    {
+      "id": 3,
+      "nome": "Carla",
+      "pedidos_pagos": 0,
+      "total_pago": 0
+    },
+    {
+      "id": 4,
+      "nome": "Diego",
+      "pedidos_pagos": 1,
+      "total_pago": 0
+    }
+  ],
+  "ordenado": true
+}

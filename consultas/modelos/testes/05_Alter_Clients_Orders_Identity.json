@@ -1,0 +1,21 @@
+{
+  "descricao": "Identity preserva ids existentes e sincroniza novas sequências",
+  "verificacoes": [
+    {
+      "sql": "SELECT table_name,is_identity,identity_generation FROM information_schema.columns WHERE table_schema='ws4' AND table_name IN ('clientes','pedidos') AND column_name='id' ORDER BY table_name",
+      "esperado": [
+        {
+          "table_name": "clientes",
+          "is_identity": "YES",
+          "identity_generation": "BY DEFAULT"
+        },
+        {
+          "table_name": "pedidos",
+          "is_identity": "YES",
+          "identity_generation": "BY DEFAULT"
+        }
+      ],
+      "ordenado": true
+    }
+  ]
+}

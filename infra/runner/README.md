@@ -1,8 +1,8 @@
 # Executor do banco de demonstração
 
-O executor GitHub Actions usa a imagem oficial, com o cliente PostgreSQL adicionado no Dockerfile. Executa em um contêiner ligado à rede `ws4-workshop_default`, sem porta publicada e sem acesso ao socket Docker. O PostgreSQL e o pgAdmin continuam nos contêineres existentes.
+O executor GitHub Actions usa a imagem oficial, com o cliente PostgreSQL e as dependências do catálogo adicionados no Dockerfile. Executa em um contêiner ligado à rede `ws4-workshop_default`, sem porta publicada e sem acesso ao socket Docker. O PostgreSQL e o pgAdmin continuam nos contêineres existentes.
 
-A etiqueta `ws4-banco-demo` identifica o executor exclusivo deste repositório. O workflow de aplicação atende apenas à `main`, após o merge de um PR destinado à `main` com alteração em `sql/` ou acionamento manual. Pull Requests continuam usando os executores temporários do GitHub para validação.
+A etiqueta `ws4-banco-demo` identifica o executor exclusivo deste repositório. O workflow de aplicação atende apenas à `main`, após o merge de um PR da develop para a main com alteração em `sql/` ou `consultas/` ou `consultas/` ou acionamento manual. Pull Requests continuam usando os executores temporários do GitHub para validação.
 
 ## Pré-requisitos
 
@@ -19,7 +19,7 @@ A preparação e o cadastro são feitos pela pessoa que administra o banco de de
 Execute na raiz do clone, em Bash:
 
 ```bash
-docker build -t ws4-actions-runner:local infra/runner
+docker build -t ws4-actions-runner:local -f infra/runner/Dockerfile .
 docker run -d --name ws4-actions-runner --restart unless-stopped \
   --network ws4-workshop_default \
   -e PGHOST=db -e PGPORT=5432 -e PGDATABASE=workshop \

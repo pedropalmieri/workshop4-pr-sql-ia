@@ -1,6 +1,30 @@
 name: Testes SQL
-on: [pull_request, workflow_dispatch]
+on:
+  push:
+    branches: [develop]
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: testes-${{ github.event_name }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
+  origem:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Conferir origem da promoção
+        env:
+          EVENTO: ${{ github.event_name }}
+          BRANCH: ${{ github.head_ref }}
+          REPO_ORIGEM: ${{ github.event.pull_request.head.repo.full_name }}
+          REPO_ATUAL: ${{ github.repository }}
+        run: |
+          if [ "$EVENTO" = pull_request ]; then
+            test "$BRANCH" = develop
+            test "$REPO_ORIGEM" = "$REPO_ATUAL"
+          fi
   sql:
     runs-on: ubuntu-latest
     steps:
@@ -30,5 +54,36 @@ jobs:
       - name: Validar interface e conexao
         run: bash scripts/validar-interface.sh
       - name: Encerrar
+        if: always()
+        run: bash demo.sh encerrar
+  versoes:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    env:
+      WS4_PROJECT: ws4-ci-versoes
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - name: Preparar validador em Docker
+        run: docker compose -p "$WS4_PROJECT" --profile validacao build validador
+      - name: Preparar banco isolado
+        run: |
+          bash demo.sh subir
+          bash demo.sh base
+          bash demo.sh inicio
+      - name: Validar catálogo, sintaxe, resultados e histórico
+        env:
+          BASE_REF: ${{ github.event.pull_request.base.sha || github.event.before }}
+        run: |
+          if [ -n "$BASE_REF" ]; then
+            docker compose -p "$WS4_PROJECT" --profile validacao run --rm -e GITHUB_SHA -e GITHUB_RUN_ID validador python scripts/versoes_sql.py validar --base "$BASE_REF"
+          else
+            docker compose -p "$WS4_PROJECT" --profile validacao run --rm -e GITHUB_SHA -e GITHUB_RUN_ID validador
+          fi
+      - name: Testar modelos e rejeições
+        run: docker compose -p "$WS4_PROJECT" --profile validacao run --rm -e WS4_TESTDB=1 validador python -m unittest discover -s tests -v
+      - name: Encerrar banco isolado
         if: always()
         run: bash demo.sh encerrar
