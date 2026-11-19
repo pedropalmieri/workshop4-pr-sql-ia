@@ -1,0 +1,23 @@
+{
+  "descricao": "12_Drop_Validation_Table",
+  "verificacoes": [
+    {
+      "sql": "SELECT EXISTS (SELECT 1 FROM information_schema.tables WHERE table_schema='ws4_demo' AND table_name='validacao_release') AS existe;",
+      "esperado": [
+        {
+          "existe": false
+        }
+      ],
+      "ordenado": true
+    },
+    {
+      "sql": "SELECT count(*) AS colunas FROM information_schema.columns WHERE table_schema='ws4_demo' AND table_name='validacao_release';",
+      "esperado": [
+        {
+          "colunas": 0
+        }
+      ],
+      "ordenado": true
+    }
+  ]
+}
